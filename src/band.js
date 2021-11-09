@@ -1,19 +1,23 @@
 import { Client, Wallet, Obi, Message, Coin, Transaction, Fee } from "@bandprotocol/bandchain.js";
 
-const grpcUrl = 'https://laozi1.bandchain.org/grpc-web';
+const grpcUrl = 'https://laozi-testnet4.bandchain.org/grpc-web';
 const client = new Client(grpcUrl)
 
-export async function makeRequest() {
+export async function makeRequest(symbols) {
+    symbols = symbols.split(',')
+    console.log(symbols)
     // Step 1: Import a private key for signing transaction
     const { PrivateKey } = Wallet
     const mnemonic = "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid"
     const privateKey = PrivateKey.fromMnemonic(mnemonic)
     const pubkey = privateKey.toPubkey()
     const sender = pubkey.toAddress().toAccBech32()
+    // console.log(sender)
+    // const sender = "band1jrhuqrymzt4mnvgw8cvy3s9zhx3jj0dq30qpte"
   
     // Step 2.1: Prepare oracle request's properties
     const obi = new Obi("{symbols:[string],multiplier:u64}/{rates:[u64]}")
-    const calldata = obi.encodeInput({ symbols: ["BTC"], multiplier: 100 })
+    const calldata = obi.encodeInput({ symbols: symbols, multiplier: 100 })
   
     const oracleScriptId = 37
     const askCount = 2
