@@ -116,3 +116,21 @@ export async function makeRequest(symbols) {
     const response = await client.sendTxBlockMode(signedTx)
     return response
   }
+
+  export async function sendDelegate() {
+    const { MsgSend } = Message
+
+    const sender = "band1jrhuqrymzt4mnvgw8cvy3s9zhx3jj0dq30qpte"
+    const receiver = "band1zkf9qzs7ayf3uqksxqwve8q693dsdhxktetdf9"
+    const sendAmount = new Coin()
+    sendAmount.setDenom("uband")
+    sendAmount.setAmount("10")
+    const msg = new MsgSend(sender, receiver, [sendAmount])
+    console.log(msg)
+
+    // msg.validate()
+    
+
+    console.log(msg.validate())
+    return msg.validate()
+  }

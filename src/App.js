@@ -10,6 +10,7 @@ import {
 import SendToken from './routes/SendToken';
 import SendRequest from './routes/SendRequest';
 import GetPrice from './routes/GetPrice';
+import Delegate from './routes/Delegate';
 
 function App() {
     return (
@@ -25,8 +26,11 @@ function App() {
                 <Link to="/request" className="bg-none text-indigo p-0 mr-4 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
                   Create a Request
                 </Link>
-                <Link to="/sendToken" className="bg-none text-indigo p-0 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
+                <Link to="/sendToken" className="bg-none text-indigo p-0 mr-4 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
                   Send Token
+                </Link>
+                <Link to="/delegate" className="bg-none text-indigo p-0 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
+                  Delegate
                 </Link>
               </nav>
             </div>
@@ -36,6 +40,7 @@ function App() {
             <Route path="/sendToken" element={<SendToken />} />
             <Route path="/request" element={<SendRequest />} />
             <Route path="/getprice" element={<GetPrice />} />
+            <Route path="/delegate" element={<Delegate />} />
           </Routes>
         </div>
         </BrowserRouter>
