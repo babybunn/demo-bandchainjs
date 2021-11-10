@@ -1,9 +1,11 @@
 import { useState } from "react";
-import {sendDelegate} from "../band";
+import {sendCoin} from "../band";
 
 function FormDelegate() {
-    const [validator, setValidator] = useState("")
+    const [validator, setValidator] = useState("bandvaloper1zkf9qzs7ayf3uqksxqwve8q693dsdhxk800wvw")
     const [amount, setAmount] = useState("")
+    const [sendResult, setSendResult] = useState("")
+    const [sendResultSuccess, setSendResultSuccess] = useState("")
 
     const handleInputValidator = e => {
         if( e.target.value ) setValidator( e.target.value )
@@ -11,6 +13,13 @@ function FormDelegate() {
 
     const handleInputAmount = e => {
         if( e.target.value ) setAmount( e.target.value )
+    }
+
+    const sendBandToken = async () => {
+        if ( !validator && !amount) return
+        const response = await sendCoin(validator, amount);
+        if( response.data === "") setSendResult(response.rawLog)
+        if( response.data !== "") setSendResultSuccess(response.txhash)
     }
 
     return (
@@ -28,11 +37,11 @@ function FormDelegate() {
             <input className="focus:outline-none focus:ring-2 focus:ring-purple-600 block w-full p-2 sm:text-sm border-solid border border-gray-200 rounded-md" type="number" min="0" id="input-amount" onChange={handleInputAmount} value={amount} />
           </div>
           </div>
-          <button onClick={sendDelegate} className="button block w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-purple-600 focus:ring-opacity-50 transition duration-500 ease-in-out">
+          <button onClick={sendBandToken} className="button block w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-purple-600 focus:ring-opacity-50 transition duration-500 ease-in-out">
           Delegate
         </button>
           </div>
-          {/* { sendResult ? <div className="mt-5 text-red-500">{sendResult}</div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div> : '' } */}
+          { sendResult ? <div className="mt-5 text-red-500">{sendResult}</div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div> : '' }
         </div>
         </div>
     )

@@ -18,8 +18,6 @@ function FormSendToken() {
         const response = await sendCoin(receiverAddress, tokenAmount);
         if( response.data === "") setSendResult(response.rawLog)
         if( response.data !== "") setSendResultSuccess(response.txhash)
-
-        
     }
 
     return (
