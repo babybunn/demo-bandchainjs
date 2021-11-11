@@ -88,13 +88,8 @@ export async function makeRequest(symbols) {
     sendAmount.setDenom("uband")
     sendAmount.setAmount(amount)
 
-    let msg = null;
-    if ( action === 'delegate' ) {
-      msg = new MsgDelegate(sender, receiver, sendAmount)
-    }else {
-      msg = new MsgSend(sender, receiver, [sendAmount])
-    }
-    
+    const msg = action === 'delegate' ? new MsgDelegate(sender, receiver, sendAmount): new MsgSend(sender, receiver, [sendAmount]);
+
     // Step 3.2 constructs a transaction
     const account = await client.getAccount(sender)
     console.log(account)
