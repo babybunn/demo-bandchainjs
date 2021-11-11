@@ -72,9 +72,9 @@ export async function makeRequest(symbols) {
     return sendTx
   }
 
-  export const sendCoin = async (address, amount) => {
+  export const sendCoin = async (address, amount, action='send') => {
     // Step 3.1 constructs MsgSend message
-    const { MsgSend } = Message
+    const { MsgSend, MsgDelegate } = Message
       // Step 1: Import a private key for signing transaction
     const { PrivateKey } = Wallet
     const mnemonic = "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid"
@@ -87,7 +87,14 @@ export async function makeRequest(symbols) {
     const sendAmount = new Coin()
     sendAmount.setDenom("uband")
     sendAmount.setAmount(amount)
-    const msg = new MsgSend(sender, receiver, [sendAmount])
+
+    let msg = null;
+    if ( action === 'delegate' ) {
+      msg = new MsgDelegate(sender, receiver, sendAmount)
+    }else {
+      msg = new MsgSend(sender, receiver, [sendAmount])
+    }
+    
     // Step 3.2 constructs a transaction
     const account = await client.getAccount(sender)
     console.log(account)
@@ -114,5 +121,6 @@ export async function makeRequest(symbols) {
   
     // Step 5 send the transaction
     const response = await client.sendTxBlockMode(signedTx)
+
     return response
   }

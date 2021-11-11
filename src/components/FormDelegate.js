@@ -17,7 +17,7 @@ function FormDelegate() {
 
     const sendBandToken = async () => {
         if ( !validator && !amount) return
-        const response = await sendCoin(validator, amount);
+        const response = await sendCoin(validator, amount, 'delegate');
         if( response.data === "") setSendResult(response.rawLog)
         if( response.data !== "") setSendResultSuccess(response.txhash)
     }
