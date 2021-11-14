@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ![Screenshot](https://i.imgur.com/QEWHQvq.png)
 
+## Demo App
+
+[https://demo-bandchainjs.herokuapp.com/](https://demo-bandchainjs.herokuapp.com/)
+
 ## Available Scripts
 
 In the project directory, you can run:
