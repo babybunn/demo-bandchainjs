@@ -11,12 +11,13 @@ import SendToken from './routes/SendToken';
 import SendRequest from './routes/SendRequest';
 import GetPrice from './routes/GetPrice';
 import Delegate from './routes/Delegate';
+import IBCTransfer from './routes/IBCTransfer';
 
 function App() {
     return (
       <BrowserRouter>
         <div className="App pt-10">
-          <div className="container mx-auto max-w-md">
+          <div className="container mx-auto max-w-lg">
             <h1 className="text-2xl text-center mb-4"><strong>BandChain.js Demo</strong></h1>
             <div className="text-center">
               <nav>
@@ -29,8 +30,11 @@ function App() {
                 <Link to="/sendToken" className="bg-none text-indigo p-0 mr-4 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
                   Send Token
                 </Link>
-                <Link to="/delegate" className="bg-none text-indigo p-0 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
+                <Link to="/delegate" className="bg-none text-indigo p-0 mr-4 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
                   Delegate
+                </Link>
+                <Link to="/transfer" className="bg-none text-indigo p-0 rounded-md hover:none focus:outline-none transition duration-500 ease-in-out">
+                  IBC Transfer
                 </Link>
               </nav>
             </div>
@@ -41,6 +45,7 @@ function App() {
             <Route path="/request" element={<SendRequest />} />
             <Route path="/getprice" element={<GetPrice />} />
             <Route path="/delegate" element={<Delegate />} />
+            <Route path="/transfer" element={<IBCTransfer />} />
           </Routes>
         </div>
         </BrowserRouter>

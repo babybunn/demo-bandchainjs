@@ -24,7 +24,7 @@ module.exports = {
       boxShadow: {
         blue: '0 4px 14px 0 rgba(19, 51, 81, 0.39)',
         indigo: '0 10px 15px -3px rgba(199, 210, 254, 0.1), 0 4px 6px -2px rgba(199, 210, 254, 0.3)'
-      },
+      }
     }
   },
   variants: {

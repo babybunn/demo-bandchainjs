@@ -1,4 +1,5 @@
 import { Client, Wallet, Obi, Message, Coin, Transaction, Fee } from "@bandprotocol/bandchain.js";
+import moment from 'moment';
 
 const grpcUrl = 'https://laozi-testnet4.bandchain.org/grpc-web';
 const client = new Client(grpcUrl)
@@ -72,9 +73,10 @@ export async function makeRequest(symbols) {
     return sendTx
   }
 
-  export const sendCoin = async (address, amount, action='send') => {
+  export const sendCoin = async (address, amount, action='send', chainId='band-laozi-testnet4') => {
+    console.log(address)
     // Step 3.1 constructs MsgSend message
-    const { MsgSend, MsgDelegate } = Message
+    const { MsgSend, MsgDelegate, MsgTransfer } = Message
       // Step 1: Import a private key for signing transaction
     const { PrivateKey } = Wallet
     const mnemonic = "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid"
@@ -88,12 +90,11 @@ export async function makeRequest(symbols) {
     sendAmount.setDenom("uband")
     sendAmount.setAmount(amount)
 
-    const msg = action === 'delegate' ? new MsgDelegate(sender, receiver, sendAmount): new MsgSend(sender, receiver, [sendAmount]);
+    const msg = action === 'delegate' ? new MsgDelegate(sender, receiver, sendAmount): action === 'transfer' ? new MsgTransfer(sender, receiver, sendAmount) : new MsgSend(sender, receiver, [sendAmount]);
 
     // Step 3.2 constructs a transaction
     const account = await client.getAccount(sender)
     console.log(account)
-    const chainId = "band-laozi-testnet4"
   
     let feeCoin = new Coin()
     feeCoin.setDenom("uband")
@@ -119,3 +120,54 @@ export async function makeRequest(symbols) {
 
     return response
   }
+
+
+  export const sendIBC = async (address, amount) => {
+    // Step 3.1 constructs MsgSend message
+    const { MsgTransfer } = Message
+      // Step 1: Import a private key for signing transaction
+    const { PrivateKey } = Wallet
+    const mnemonic = "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid"
+    const privateKey = PrivateKey.fromMnemonic(mnemonic)
+    const pubkey = privateKey.toPubkey()
+    const sender = pubkey.toAddress().toAccBech32()
+
+    // Here we use different message type, which is MsgSend
+    const receiver = address
+    const sendAmount = new Coin()
+    sendAmount.setDenom("uband")
+    sendAmount.setAmount(amount)
+    const timeoutTimestamp = new Date().getTime() + 600;
+    console.log(timeoutTimestamp)
+
+    const msg = new MsgTransfer('transfer', 'channel-25', sender, receiver, sendAmount, timeoutTimestamp)
+
+    // Step 3.2 constructs a transaction
+    const account = await client.getAccount(sender)
+  
+    let feeCoin = new Coin()
+    feeCoin.setDenom("uband")
+    feeCoin.setAmount("1000")
+  
+    const fee = new Fee()
+    fee.setAmountList([feeCoin])
+    fee.setGasLimit(1000000)
+    const tx = new Transaction()
+      .withMessages(msg)
+      .withAccountNum(account.accountNumber)
+      .withSequence(account.sequence)
+      .withChainId('band-laozi-testnet4')
+      .withFee(fee)
+  
+    // Step 4 sign the transaction
+    const txSignData = tx.getSignDoc(pubkey)
+    const signature = privateKey.sign(txSignData)
+    const signedTx = tx.getTxData(signature, pubkey)
+  
+    // Step 5 send the transaction
+    const response = await client.sendTxBlockMode(signedTx)
+    console.log(response);
+
+    return response
+  }
+
