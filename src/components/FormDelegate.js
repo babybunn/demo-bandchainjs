@@ -1,11 +1,13 @@
 import { useState } from "react";
 import {sendCoin} from "../band";
+import Loading from './Loading';
 
 function FormDelegate() {
     const [validator, setValidator] = useState("bandvaloper1zkf9qzs7ayf3uqksxqwve8q693dsdhxk800wvw")
     const [amount, setAmount] = useState("")
     const [sendResult, setSendResult] = useState("")
     const [sendResultSuccess, setSendResultSuccess] = useState("")
+    const [loading, setLoading] = useState(Boolean(0));
 
     const handleInputValidator = e => {
         if( e.target.value ) setValidator( e.target.value )
@@ -17,9 +19,11 @@ function FormDelegate() {
 
     const sendBandToken = async () => {
         if ( !validator && !amount) return
+        setLoading(Boolean(1))
         const response = await sendCoin(validator, amount, 'delegate');
         if( response.data === "") setSendResult(response.rawLog)
         if( response.data !== "") setSendResultSuccess(response.txhash)
+        setLoading(Boolean(0))
     }
 
     return (
@@ -41,7 +45,9 @@ function FormDelegate() {
           Delegate
         </button>
           </div>
-          { sendResult ? <div className="mt-5 text-red-500">{sendResult}</div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div> : '' }
+          {
+              loading ? <Loading/> : ( sendResult ? <div className="mt-5 text-red-500">{sendResult}</div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div> : '' )
+          }
         </div>
         </div>
     )

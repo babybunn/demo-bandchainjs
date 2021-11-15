@@ -17,6 +17,7 @@ function FormGetPrice() {
   }
 
   async function getPrice() {
+    // console.log(pairs)
     const grpcUrl = 'https://laozi-testnet4.bandchain.org/grpc-web';
     const client = new Client(grpcUrl);
     // const pairs = ["BTC/USDT", "ETH/USDT"]

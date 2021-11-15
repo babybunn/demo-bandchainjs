@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { sendIBC } from '../band';
+import Loading from './Loading';
 
 function FormSendToken() {
     const [tokenAmount, setTokenAmount] = useState(0)
     const [receiverAddress, setReceiverAddress] = useState("band1jrhuqrymzt4mnvgw8cvy3s9zhx3jj0dq30qpte")
     const [sendResult, setSendResult] = useState("")
     const [sendResultSuccess, setSendResultSuccess] = useState("")
+    const [loading,setLoading] = useState(Boolean(0))
     const ibcchannel = 'CONSUMER'
   
     const handleInputTokenAmount = e => {
@@ -16,9 +18,11 @@ function FormSendToken() {
     }
     const sendBandToken = async () => {
         if ( !receiverAddress && !tokenAmount) return
+        setLoading(Boolean(1))
         const response = await sendIBC(receiverAddress, tokenAmount);
         if( response.data === "") setSendResult(response.rawLog)
         if( response.data !== "") setSendResultSuccess(response.txhash)
+        setLoading(Boolean(0))
     }
 
     return (
@@ -44,7 +48,7 @@ function FormSendToken() {
             Send
           </button>
             </div>
-            { sendResult ? <div className="mt-5 text-red-500">{sendResult}</div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div> : '' }
+            { loading ? <Loading /> : (sendResult ? <div className="mt-5 text-red-500">{sendResult}</div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div> : '')}
           </div>
           </div>
       );
