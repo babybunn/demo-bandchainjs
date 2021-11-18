@@ -20,7 +20,7 @@ function FormSendToken() {
         if ( !receiverAddress && !tokenAmount) return
         setLoading(Boolean(1))
         const response = await sendIBC(receiverAddress, tokenAmount);
-        if( response.data === "") setSendResult(response.rawLog)
+        if( response.height === 0 ) setSendResult(response.rawLog)
         if( response.data !== "") setSendResultSuccess(response.txhash)
         setLoading(Boolean(0))
     }
@@ -41,7 +41,7 @@ function FormSendToken() {
             </div>
             <div className="input-group mb-3">
               <label htmlFor="input-amount" className="block text-sm font-medium text-gray-700 mb-1">Token Amount (BAND)</label>
-              <input className="focus:outline-none focus:ring-2 focus:ring-purple-600 block w-full p-2 sm:text-sm border-solid border border-gray-200 rounded-md" type="number" min="0" id="input-amount" value={tokenAmount} onChange={handleInputTokenAmount} />
+              <input className="focus:outline-none focus:ring-2 focus:ring-purple-600 block w-full p-2 sm:text-sm border-solid border border-gray-200 rounded-md" type="number" id="input-amount" value={tokenAmount} onChange={handleInputTokenAmount} />
             </div>
             </div>
             <button onClick={sendBandToken} className="button block w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-purple-600 focus:ring-opacity-50 transition duration-500 ease-in-out">

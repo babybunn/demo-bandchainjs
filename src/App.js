@@ -12,6 +12,7 @@ import SendRequest from './routes/SendRequest';
 import GetPrice from './routes/GetPrice';
 import Delegate from './routes/Delegate';
 import IBCTransfer from './routes/IBCTransfer';
+import Home from './components/Home';
 
 function App() {
     return (
@@ -40,7 +41,7 @@ function App() {
             </div>
           </div>
           <Routes>
-            <Route path="/" element={<SendToken />} />
+            <Route path="/" element={<Home />} />
             <Route path="/sendToken" element={<SendToken />} />
             <Route path="/request" element={<SendRequest />} />
             <Route path="/getprice" element={<GetPrice />} />

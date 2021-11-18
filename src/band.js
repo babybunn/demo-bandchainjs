@@ -4,8 +4,8 @@ import moment from 'moment';
 const grpcUrl = 'https://laozi-testnet4.bandchain.org/grpc-web';
 const client = new Client(grpcUrl)
 
-export async function makeRequest(symbols) {
-    symbols = symbols.split(',')
+export async function makeRequest(symbols, multiplier, feeInput, prepareGas, executeGas) {
+    symbols = symbols.toUpperCase().replace(/\s/g,'').split(',')
     console.log(symbols)
     // Step 1: Import a private key for signing transaction
     const { PrivateKey } = Wallet
@@ -13,12 +13,10 @@ export async function makeRequest(symbols) {
     const privateKey = PrivateKey.fromMnemonic(mnemonic)
     const pubkey = privateKey.toPubkey()
     const sender = pubkey.toAddress().toAccBech32()
-    // console.log(sender)
-    // const sender = "band1jrhuqrymzt4mnvgw8cvy3s9zhx3jj0dq30qpte"
   
     // Step 2.1: Prepare oracle request's properties
     const obi = new Obi("{symbols:[string],multiplier:u64}/{rates:[u64]}")
-    const calldata = obi.encodeInput({ symbols: symbols, multiplier: 100 })
+    const calldata = obi.encodeInput({ symbols: [symbols], multiplier: multiplier })
   
     const oracleScriptId = 37
     const askCount = 2
@@ -27,10 +25,7 @@ export async function makeRequest(symbols) {
   
     let feeLimit = new Coin()
     feeLimit.setDenom("uband")
-    feeLimit.setAmount("10")
-  
-    const prepareGas = 100000
-    const executeGas = 200000
+    feeLimit.setAmount(feeInput)
   
     // Step 2.2: Create an oracle request message
     const requestMessage = new Message.MsgRequestData(
@@ -52,7 +47,7 @@ export async function makeRequest(symbols) {
     // Step 3.1: Construct a transaction
     const fee = new Fee()
     fee.setAmountList([feeCoin])
-    fee.setGasLimit(1000000)
+    fee.setGasLimit(10000000)
   
     const chainId = await client.getChainId()
     const txn = new Transaction()
@@ -74,9 +69,8 @@ export async function makeRequest(symbols) {
   }
 
   export const sendCoin = async (address, amount, action='send', chainId='band-laozi-testnet4') => {
-    console.log(address)
     // Step 3.1 constructs MsgSend message
-    const { MsgSend, MsgDelegate, MsgTransfer } = Message
+    const { MsgSend, MsgDelegate } = Message
       // Step 1: Import a private key for signing transaction
     const { PrivateKey } = Wallet
     const mnemonic = "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid"
@@ -88,9 +82,9 @@ export async function makeRequest(symbols) {
     const receiver = address
     const sendAmount = new Coin()
     sendAmount.setDenom("uband")
-    sendAmount.setAmount(amount)
+    sendAmount.setAmount((amount * 1e6).toString())
 
-    const msg = action === 'delegate' ? new MsgDelegate(sender, receiver, sendAmount): action === 'transfer' ? new MsgTransfer(sender, receiver, sendAmount) : new MsgSend(sender, receiver, [sendAmount]);
+    const msg = action === 'delegate' ? new MsgDelegate(sender, receiver, sendAmount) : new MsgSend(sender, receiver, [sendAmount]);
 
     // Step 3.2 constructs a transaction
     const account = await client.getAccount(sender)
@@ -136,9 +130,8 @@ export async function makeRequest(symbols) {
     const receiver = address
     const sendAmount = new Coin()
     sendAmount.setDenom("uband")
-    sendAmount.setAmount(amount)
-    const timeoutTimestamp = new Date().getTime() + 600;
-    console.log(timeoutTimestamp)
+    sendAmount.setAmount((amount * 1e6).toString())
+    const timeoutTimestamp = moment().unix() * 1e9;
 
     const msg = new MsgTransfer('transfer', 'channel-25', sender, receiver, sendAmount, timeoutTimestamp)
 
@@ -166,7 +159,6 @@ export async function makeRequest(symbols) {
   
     // Step 5 send the transaction
     const response = await client.sendTxBlockMode(signedTx)
-    console.log(response);
 
     return response
   }

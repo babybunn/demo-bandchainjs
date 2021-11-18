@@ -36,7 +36,7 @@ function FormSendToken() {
             </div>
             <div className="input-group mb-3">
               <label htmlFor="input-amount" className="block text-sm font-medium text-gray-700 mb-1">Token Amount (BAND)</label>
-              <input className="focus:outline-none focus:ring-2 focus:ring-purple-600 block w-full p-2 sm:text-sm border-solid border border-gray-200 rounded-md" type="number" min="0" id="input-amount" value={tokenAmount} onChange={handleInputTokenAmount} />
+              <input className="focus:outline-none focus:ring-2 focus:ring-purple-600 block w-full p-2 sm:text-sm border-solid border border-gray-200 rounded-md" type="number" step="0.01" id="input-amount" value={tokenAmount} onChange={handleInputTokenAmount} />
             </div>
             </div>
             <button onClick={sendBandToken} className="button block w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-purple-600 focus:ring-opacity-50 transition duration-500 ease-in-out">
@@ -46,7 +46,7 @@ function FormSendToken() {
             { loading ? 
               <Loading />
             :   <div>
-            { sendResult ? <div className="mt-5 text-red-500">{sendResult}</div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div> : '' }
+            { sendResult ? <div className="mt-5 text-red-500"><div className="mt-5">{sendResult}</div></div> : sendResultSuccess ? <div className="mt-3 whitespace-nowrap overflow-ellipsis overflow-hidden"><div class="mt-5">Transaction: <a className="text-indigo-500" href={`https://laozi-testnet4.cosmoscan.io/tx/${sendResultSuccess}`}>{sendResultSuccess}</a></div></div> : '' }
           </div>}
           </div>
           </div>
