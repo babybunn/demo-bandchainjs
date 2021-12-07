@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function BackButton() {
   return (
-    <div className="mt-5">
+    <div className="mt-10">
       <Link to="/" className="text-xl font-bold text-black group inline-block">
         <div className="flex items-center">
           <div

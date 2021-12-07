@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
 import ModalConnectWallet from "./ModalConnectWallet";
 import { ModalContext } from "../../app-context";
 import { useSelector } from "react-redux";
@@ -25,8 +26,10 @@ function Navbar() {
           <div className="relative flex items-center justify-between h-16">
             <div className="flex-1 flex items-center justify-start">
               <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-lg">
-                  <strong>BandChain.js</strong>
+                <h1 className="text-lg hover:text-blue">
+                  <strong>
+                    <Link to="/">BandChain.js</Link>
+                  </strong>
                 </h1>
               </div>
             </div>
@@ -37,7 +40,7 @@ function Navbar() {
                 ) : (
                   <button
                     onClick={(e) => setIsShow(!isShow)}
-                    className="button bg-yellow-400 text-blue text-lg py-2 px-6 rounded-lg hover:bg-yellow-500 focus:outline-none focus:ring-yellow-500 focus:ring-opacity-50"
+                    className="button text-blue text-lg py-2 px-6 rounded-lg bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-500 focus:ring-opacity-50"
                   >
                     Connect Wallet
                   </button>

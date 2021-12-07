@@ -27,7 +27,6 @@ function App() {
         <Navbar />
         <div className="container mx-auto max-w-full">
           <div className="card bg-white p-10 rounded-2xl mt-5">
-            <BackRoute />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/sendToken" element={<SendToken />} />
@@ -37,6 +36,7 @@ function App() {
               <Route path="/transfer" element={<IBCTransfer />} />
               <Route path="/datasource" element={<DataSource />} />
             </Routes>
+            <BackRoute />
           </div>
         </div>
       </div>
