@@ -30,7 +30,7 @@ export default function FormConnectWallet() {
               Enter mnemonic phrase
             </label>
             <input
-              className="focus:outline-none focus:ring-2 focus:ring-purple-600 block w-full p-2 sm:text-sm border-solid border border-gray-200 rounded-md"
+              className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
               type="text"
               id="input-address"
               valur={mnemonic}

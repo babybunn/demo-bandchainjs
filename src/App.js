@@ -11,6 +11,7 @@ import DataSource from "./routes/DataSource";
 import Home from "./components/Home";
 import Navbar from "./components/Header/Navbar";
 import BackButton from "./components/BackButton";
+import Footer from "./components/Footer";
 
 const BackRoute = () => {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
             <BackRoute />
           </div>
         </div>
+        <Footer />
       </div>
     </BrowserRouter>
   );

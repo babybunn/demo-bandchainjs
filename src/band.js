@@ -80,20 +80,14 @@ export async function makeRequest(symbols, multiplier, feeInput, prepareGas, exe
 export const sendCoin = async (
   address,
   amount,
+  privateKey,
+  pubkey,
+  sender,
   action = "send",
   chainId = "band-laozi-testnet4"
 ) => {
-  // Step 3.1 constructs MsgSend message
   const { MsgSend, MsgDelegate } = Message;
-  // Step 1: Import a private key for signing transaction
-  const { PrivateKey } = Wallet;
-  const mnemonic =
-    "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid";
-  const privateKey = PrivateKey.fromMnemonic(mnemonic);
-  const pubkey = privateKey.toPubkey();
-  const sender = pubkey.toAddress().toAccBech32();
 
-  // Here we use different message type, which is MsgSend
   const receiver = address;
   const sendAmount = new Coin();
   sendAmount.setDenom("uband");
@@ -104,7 +98,6 @@ export const sendCoin = async (
       ? new MsgDelegate(sender, receiver, sendAmount)
       : new MsgSend(sender, receiver, [sendAmount]);
 
-  // Step 3.2 constructs a transaction
   const account = await client.getAccount(sender);
   console.log(account);
 
@@ -133,16 +126,8 @@ export const sendCoin = async (
   return response;
 };
 
-export const sendIBC = async (address, amount) => {
-  // Step 3.1 constructs MsgSend message
+export const sendIBC = async (address, amount, privateKey, pubkey, sender) => {
   const { MsgTransfer } = Message;
-  // Step 1: Import a private key for signing transaction
-  const { PrivateKey } = Wallet;
-  const mnemonic =
-    "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid";
-  const privateKey = PrivateKey.fromMnemonic(mnemonic);
-  const pubkey = privateKey.toPubkey();
-  const sender = pubkey.toAddress().toAccBech32();
 
   // Here we use different message type, which is MsgSend
   const receiver = address;

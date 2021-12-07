@@ -3,6 +3,15 @@ import { Client } from "@bandprotocol/bandchain.js";
 import CardPrice from "./CardPrice";
 
 function FormGetPrice() {
+  const defaultPair = [
+    "BTC/USD",
+    "ETH/USD",
+    "BNB/USD",
+    "LUNA/USD",
+    "DOT/USD",
+    "BAND/USD",
+    "ALPHA/USD",
+  ];
   // states
   const [prices, setPrice] = useState([]);
   const [pairInput, setPairInput] = useState("");
@@ -10,7 +19,7 @@ function FormGetPrice() {
   const [askCount, setaskCount] = useState(16);
 
   useEffect(() => {
-    getPrice(["BTC/USD", "ETH/USD", "BNB/USD", "LUNA/USD", "DOT/USD", "BAND/USD", "ALPHA/USD"]);
+    getPrice(defaultPair);
   }, []);
 
   async function getPrice(pair = []) {
@@ -21,7 +30,7 @@ function FormGetPrice() {
         ? pairInput.toUpperCase().replace(/\s/g, "").split(",")
         : pair.length > 0
         ? pair
-        : ["BTC/USD", "ETH/USD", "BNB/USD", "LUNA/USD", "DOT/USD", "BAND/USD", "ALPHA/USD"],
+        : defaultPair,
       minCount,
       askCount
     );
@@ -47,7 +56,9 @@ function FormGetPrice() {
           method. This example query standard price references based on given symbol pairs, min
           count, and ask count.
         </p>
-        <div className="card bg-white p-6 border-2 border-black rounded rounded-2xl w-full">
+      </div>
+      <div className="w-full md:w-8/12 md:pl-10">
+        <div className="card bg-white p-6 border-2 border-black rounded rounded-2xl w-full mb-10">
           <div className="card-inner">
             <div className="mb-5">
               <div className="input-group mb-3">
@@ -101,13 +112,11 @@ function FormGetPrice() {
               onClick={getPrice}
               className="button block w-full text-md text-white bg-black hover:bg-black border-2 border-black focus:outline-none focus:ring-black focus:ring-opacity-50  py-2 px-4 rounded-xl focus:outline-none"
             >
-              Get Price
+              Request
             </button>
           </div>
         </div>
-      </div>
-      <div className="w-full md:w-8/12 md:pl-10">
-        <h3 className="text-lg mb-8">
+        <h3 className="text-xl mb-8">
           <strong>Results</strong>
         </h3>
         <div className="flex flex-row gap-6 flex-wrap">

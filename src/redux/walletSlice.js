@@ -15,7 +15,7 @@ export const walletSlice = createSlice({
       state.address = action.payload.address;
       state.name = action.payload.name;
       state.privateKey = action.payload.privateKey;
-      state.pubkey = action.payload.privateKey;
+      state.pubkey = action.payload.pubkey;
     },
     removeWallet: (state, action) => {
       state.address = null;

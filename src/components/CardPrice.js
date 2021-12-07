@@ -3,7 +3,7 @@ export default function CardPrice({ value }) {
   const symbol = orgPair.split("/")[0].toLowerCase();
   return (
     <div className="card bg-yellow-50 relative p-3 border-2 border-black rounded-xl w-full md:w-2/6 lg:w-1/6 cursor-pointer hover:bg-yellow-100">
-      <div className="coin-symbol w-6 h-6 overflow-hidden bg-white rounded-full flex justify-center items-center text-black">
+      <div className="coin-symbol  w-6 h-6 overflow-hidden bg-white rounded-full flex justify-center items-center text-black">
         <img
           src={`https://data.bandprotocol.com/tokens/${symbol}.png`}
           alt=""
