@@ -1,9 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,600;0,900;1,300;1,600;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .App {
-  height: 100vh;
   background: linear-gradient(-45deg, #c4b5fd, #fdedf3, #e6e8ef, #eefcf9);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
