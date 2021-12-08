@@ -173,10 +173,73 @@ export const sendIBC = async (address, amount, privateKey, pubkey, sender) => {
   return response;
 };
 
-export const createDataSource = () => {
-  const msg = new Message.MsgCreateDataSource(null);
+export const createDataSource = async (
+  title,
+  code,
+  sender,
+  owner,
+  treasury,
+  privateKey,
+  pubkey,
+  ...desc
+) => {
+  let feeCoin = new Coin();
+  feeCoin.setDenom("uband");
+  feeCoin.setAmount("1000");
+
+  const msg = new Message.MsgCreateDataSource(title, code, [feeCoin], treasury, owner, sender);
+
+  const fee = new Fee();
+  fee.setAmountList([feeCoin]);
+  fee.setGasLimit(1000000);
+
+  const account = await client.getAccount(sender);
+
+  const tx = new Transaction()
+    .withMessages(msg)
+    .withAccountNum(account.accountNumber)
+    .withSequence(account.sequence)
+    .withChainId("band-laozi-testnet4")
+    .withFee(fee);
+
+  // Step 4 sign the transaction
+  const txSignData = tx.getSignDoc(pubkey);
+  const signature = privateKey.sign(txSignData);
+  const signedTx = tx.getTxData(signature, pubkey);
+
+  // Step 5 send the transaction
+  const response = await client.sendTxBlockMode(signedTx);
+
+  return response;
 };
 
-export const editDataSource = () => {
-  const msg = new Message.MsgCreateDataSource(null);
+export const editDataSource = async (id, code, sender, owner, privateKey, pubkey, ...args) => {
+  let feeCoin = new Coin();
+  feeCoin.setDenom("uband");
+  feeCoin.setAmount("1000");
+
+  const msg = new Message.MsgEditDataSource(parseInt(id), code, [feeCoin], owner, sender);
+
+  const fee = new Fee();
+  fee.setAmountList([feeCoin]);
+  fee.setGasLimit(1000000);
+
+  const account = await client.getAccount(sender);
+
+  const tx = new Transaction()
+    .withMessages(msg)
+    .withAccountNum(account.accountNumber)
+    .withSequence(account.sequence)
+    .withChainId("band-laozi-testnet4")
+    .withFee(fee);
+
+  // Step 4 sign the transaction
+  const txSignData = tx.getSignDoc(pubkey);
+  const signature = privateKey.sign(txSignData);
+  const signedTx = tx.getTxData(signature, pubkey);
+
+  // Step 5 send the transaction
+  const response = await client.sendTxBlockMode(signedTx);
+
+  return response;
 };
