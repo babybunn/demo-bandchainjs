@@ -74,6 +74,7 @@ export async function makeRequest(symbols, multiplier, feeInput, prepareGas, exe
 
   // Step 4: Broadcast the transaction
   const sendTx = await client.sendTxBlockMode(txRawBytes);
+  console.log(sendTx);
   return sendTx;
 }
 
