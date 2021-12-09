@@ -17,15 +17,14 @@ export async function makeRequest(symbols, multiplier, feeInput, prepareGas, exe
 
   // Step 1: Import a private key for signing transaction
   const { PrivateKey } = Wallet;
-  const mnemonic =
-    "subject economy equal whisper turn boil guard giraffe stick retreat wealth card only buddy joy leave genuine resemble submit ghost top polar adjust avoid";
+  const mnemonic = "s";
   const privateKey = PrivateKey.fromMnemonic(mnemonic);
   const pubkey = privateKey.toPubkey();
   const sender = pubkey.toAddress().toAccBech32();
 
   // Step 2.1: Prepare oracle request's properties
   const obi = new Obi("{symbols:[string],multiplier:u64}/{rates:[u64]}");
-  const calldata = obi.encodeInput({ symbols: [symbols], multiplier: multiplier });
+  const calldata = obi.encodeInput({ symbols: symbols, multiplier: multiplier });
 
   const oracleScriptId = 37;
   const askCount = 2;
@@ -184,11 +183,14 @@ export const createDataSource = async (
   pubkey,
   ...desc
 ) => {
+  const { MsgCreateDataSource } = Message;
   let feeCoin = new Coin();
   feeCoin.setDenom("uband");
   feeCoin.setAmount("1000");
 
-  const msg = new Message.MsgCreateDataSource(title, code, [feeCoin], treasury, owner, sender);
+  const msg = MsgCreateDataSource(title, code, [feeCoin], treasury, owner, sender);
+
+  // const msg = new Message.MsgCreateDataSource(title, code, [feeCoin], treasury, owner, sender);
 
   const fee = new Fee();
   fee.setAmountList([feeCoin]);

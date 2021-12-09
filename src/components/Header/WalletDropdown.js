@@ -20,7 +20,7 @@ export default function WalletDropdown() {
       <div>
         <button
           onClick={(e) => setToggleDropdown(!toggleDropdown)}
-          className="inline-flex justify-center items-center w-full rounded-xl font-bold text-lg py-2 px-6 rounded-lg text-white bg-black hover:bg-black focus:outline-none"
+          className="inline-flex justify-center items-center w-full rounded-xl font-bold text-sm md:text-lg py-1 md:py-2 px-2 md:px-6 rounded-lg text-white bg-black hover:bg-black focus:outline-none"
         >
           <span className="inline-block mr-1">{account}</span>
           <svg

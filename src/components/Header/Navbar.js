@@ -22,15 +22,24 @@ function Navbar() {
   return (
     <React.Fragment>
       <nav className="bg-white rounded-2xl">
-        <div className="mx-auto px-10">
-          <div className="relative flex items-center justify-between h-16">
+        <div className="mx-auto md:px-10 p-3 md:py-0">
+          <div className="relative flex items-center justify-between md:h-16">
             <div className="flex-1 flex items-center justify-start">
               <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-lg hover:text-blue">
-                  <strong>
-                    <Link to="/">BandChain.js</Link>
-                  </strong>
-                </h1>
+                <div className="flex md:items-end">
+                  <h1 className="text-md md:text-xl">
+                    <strong>
+                      <Link to="/" className="hover:text-blue">
+                        BandChain.js
+                      </Link>
+                    </strong>
+                  </h1>
+                  <div className="text-lg md:ml-2 flex items-center">
+                    <span className="hidden md:inline-block">Playgr</span>
+                    <span className="logo-ball w-3 h-3  mx-1 block bg-orange rounded-full animate-bounce"></span>
+                    <span className="hidden md:inline-block">und</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="flex-1 flex items-center justify-end">
@@ -40,7 +49,7 @@ function Navbar() {
                 ) : (
                   <button
                     onClick={(e) => setIsShow(!isShow)}
-                    className="button text-blue text-lg py-2 px-6 rounded-lg bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-500 focus:ring-opacity-50"
+                    className="button text-blue text-sm md:text-lg py-2 px-2 md:px-6 rounded-lg bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-500 focus:ring-opacity-50"
                   >
                     Connect Wallet
                   </button>

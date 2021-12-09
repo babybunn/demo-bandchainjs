@@ -24,10 +24,10 @@ const BackRoute = () => {
 function App() {
   return (
     <BrowserRouter>
-      <div className="App p-6">
+      <div className="App md:p-6 p-3">
         <Navbar />
         <div className="container mx-auto max-w-full">
-          <div className="card bg-white p-10 rounded-2xl mt-5">
+          <div className="card bg-white md:p-10 p-5 rounded-2xl mt-5">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/sendToken" element={<SendToken />} />

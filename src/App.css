@@ -32,6 +32,21 @@
   animation: spinner 1.5s linear infinite;
 }
 
+.form-wrapper {
+  min-height: 355px;
+}
+
+.choice-code input[type="radio"] {
+  position: absolute;
+  left: -100%;
+  height: 0;
+}
+
+.choice-code input:checked + label {
+  border-color: #1820ef !important;
+  background-color: #eef2ff;
+}
+
 @-webkit-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
