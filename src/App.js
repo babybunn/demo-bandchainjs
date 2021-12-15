@@ -2,16 +2,20 @@ import "./App.css";
 import { React, useState, useEffect } from "react";
 import { Link, BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
-import SendToken from "./routes/SendToken";
-import SendRequest from "./routes/SendRequest";
-import GetPrice from "./routes/GetPrice";
-import Delegate from "./routes/Delegate";
-import IBCTransfer from "./routes/IBCTransfer";
-import DataSource from "./routes/DataSource";
+// components
 import Home from "./components/Home";
 import Navbar from "./components/Header/Navbar";
 import BackButton from "./components/BackButton";
 import Footer from "./components/Footer";
+
+// routes
+import GetPrice from "./routes/GetPrice";
+import Delegate from "./routes/Delegate";
+import SendToken from "./routes/SendToken";
+import SendRequest from "./routes/SendRequest";
+import IBCTransfer from "./routes/IBCTransfer";
+import DataSource from "./routes/DataSource";
+import OracleScript from "./routes/OracleScript";
 
 const BackRoute = () => {
   const location = useLocation();
@@ -36,6 +40,7 @@ function App() {
               <Route path="/delegate" element={<Delegate />} />
               <Route path="/transfer" element={<IBCTransfer />} />
               <Route path="/datasource" element={<DataSource />} />
+              <Route path="/oraclescript" element={<OracleScript />} />
             </Routes>
             <BackRoute />
           </div>

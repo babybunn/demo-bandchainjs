@@ -7,11 +7,11 @@ import AccountWithBalance from "./AccountWithBalance";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
-import "prismjs/components/prism-python";
+import "prismjs/components/prism-rust";
 // import "prismjs/themes/prism.css";
 import "prismjs/themes/prism-tomorrow.css";
 
-export default function FormCreateDataSource() {
+export default function FormCreateOracleScript() {
   const wallet = useSelector((state) => state.wallet);
 
   // State
@@ -22,11 +22,11 @@ export default function FormCreateDataSource() {
   // Form Data
   const [dsname, setdsname] = useState("");
   const [dsdesc, setdsdesc] = useState("");
+  const [schema, setschema] = useState("");
   const [owner, setOwner] = useState("");
-  const [treasury, setTreasury] = useState("");
   const [code, setCode] = useState([]);
   const [filename, setfilename] = useState("");
-  const [codeEditor, setCodeEditor] = useState(`# Insert your code here`);
+  const [codeEditor, setCodeEditor] = useState(`// Insert your code here`);
 
   // Handling Functions
   const nextStep = (e) => {
@@ -39,7 +39,7 @@ export default function FormCreateDataSource() {
   };
 
   const isFormFilled = () => {
-    if (dsname !== "" && owner !== "" && treasury !== "") {
+    if (dsname !== "" && owner !== "") {
       return false;
     }
     return true;
@@ -79,7 +79,7 @@ export default function FormCreateDataSource() {
           <Editor
             value={codeEditor}
             onValueChange={(rawcode) => setCodeEditor(rawcode)}
-            highlight={(rawcode) => highlight(rawcode, languages.py, "python")}
+            highlight={(rawcode) => highlight(rawcode, languages.rust)}
             padding={15}
             style={{
               fontFamily: '"Fira code", "Fira Mono", monospace',
@@ -172,7 +172,7 @@ export default function FormCreateDataSource() {
     <div className="flex flex-row flex-wrap">
       <div className="w-full md:w-4/12 mb-8 md:mb-0">
         <h2 className="mb-5 text-3xl ">
-          <strong>Add a new data source</strong>
+          <strong>Add a new Oracle Script</strong>
         </h2>
         <p className="mb-5">
           <a
@@ -180,22 +180,21 @@ export default function FormCreateDataSource() {
             target="_blank"
             rel="noreferrer"
           >
-            <strong>MsgCreateDataSource</strong>
+            <strong>MsgCreateOracleScript</strong>
           </a>{" "}
-          is a message for creating a new data source.
+          is a message for creating a new Oracle Script.
         </p>
         <div className="process-step">
           <ul>
             <li className="mb-5">
-              <strong>Step 1:</strong> Provide the data source information such as data source name,
-              owner, treasury address, and description.
+              <strong>Step 1:</strong> Provide the oracle script information such as name, schema,
+              owner address, and description.
             </li>
             <li className="mb-5">
-              <strong>Step 2:</strong> Upload the data source file or try using code editor in .py
-              formatted.
+              <strong>Step 2:</strong> Upload the .rust file or try using code editor
             </li>
             <li className="mb-5">
-              <strong>Step 3:</strong> Deploy your data source and Finish.
+              <strong>Step 3:</strong> Review and deploy your oracle script and Finish.
             </li>
           </ul>
         </div>
@@ -211,14 +210,14 @@ export default function FormCreateDataSource() {
                   <div className="form-container mb-5 step step-1">
                     <div className="form-wrapper mb-6">
                       <h3 className="mb-4">
-                        <strong>Step 1:</strong> Enter the data source information below.
+                        <strong>Step 1:</strong> Enter the oracle script information below.
                       </h3>
                       <div className="input-group mb-3">
                         <label
                           htmlFor="input-address"
                           className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                          Data Source Name <span className="text-orange">*</span>
+                         Oracle Script Name <span className="text-orange">*</span>
                         </label>
                         <input
                           className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
@@ -248,14 +247,14 @@ export default function FormCreateDataSource() {
                           htmlFor="input-treasury"
                           className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                          Treasury Address <span className="text-orange">*</span>
+                          Schema
                         </label>
                         <input
                           className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
                           type="text"
                           id="input-treasury"
-                          value={treasury}
-                          onChange={(e) => setTreasury(e.target.value)}
+                          value={schema}
+                          onChange={(e) => setschema(e.target.value)}
                         />
                       </div>
                       <div className="input-group mb-3">
@@ -288,7 +287,7 @@ export default function FormCreateDataSource() {
                   <div className="form-container mb-5 step step-2">
                     <div className="form-wrapper mb-6">
                       <h3 className="mb-4">
-                        <strong>Step 2:</strong> Choose how to add the data source code
+                        <strong>Step 2:</strong> Choose how to add the oracle script code
                       </h3>
 
                       <div className="flex gap-6 radio-group choice-code">
@@ -313,7 +312,7 @@ export default function FormCreateDataSource() {
                                 maxWidth: "103px",
                               }}
                             />
-                            Upload from my computer
+                            Upload from my computer (.rust)
                           </label>
                         </div>
                         <div className="flex-grow flex-shrink w-1/2 input-group mb-3">
@@ -361,7 +360,7 @@ export default function FormCreateDataSource() {
                   <div className="form-container mb-5 step step-2">
                     <div className="form-wrapper mb-6">
                       <h3 className="mb-4">
-                        <strong>Step 2.1:</strong> Add the data source code
+                        <strong>Step 2.1:</strong> Add the oracle script code (.rust)
                       </h3>
                       {renderSwitchCode()}
                     </div>

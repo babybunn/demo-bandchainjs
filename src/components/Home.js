@@ -97,7 +97,7 @@ function Home() {
           </li>
           <li className="services--list-item flex-grow w-1/5">
             <Link
-              to="/request"
+              to="/oraclescript"
               className="h-full flex items-center flex-col justify-center border-4 border-solid border-gray-200 block p-5 hover:border-blue rounded-2xl text-center"
             >
               <img
