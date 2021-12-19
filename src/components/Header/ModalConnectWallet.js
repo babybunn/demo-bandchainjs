@@ -10,7 +10,7 @@ export default function ModalConnectWallet() {
 
   useEffect(() => {
     setIsShow(false);
-  }, [wallet]);
+  }, [wallet, setIsShow]);
 
   return (
     <div

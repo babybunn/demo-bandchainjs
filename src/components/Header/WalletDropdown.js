@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeWallet } from "../../redux/walletSlice";
+import { Link } from "react-router-dom";
 
 export default function WalletDropdown() {
   const wallet = useSelector((state) => state.wallet);
@@ -48,15 +49,14 @@ export default function WalletDropdown() {
         tabIndex="-1"
       >
         <div className="py-1" role="none">
-          <a
-            href="#"
+          <Link
+            to="/myaccount"
             className="text-black block px-4 py-2 font-bold hover:bg-warmGray-100"
-            role="menuitem"
             tabIndex="-1"
             id="menu-item-0"
           >
-            Settings
-          </a>
+            My Account
+          </Link>
           <button
             onClick={(e) => dispatch(removeWallet({}))}
             type="submit"

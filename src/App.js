@@ -1,6 +1,7 @@
 import "./App.css";
 import { React, useState, useEffect } from "react";
-import { Link, BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Link, BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // components
 import Home from "./components/Home";
@@ -16,35 +17,47 @@ import SendRequest from "./routes/SendRequest";
 import IBCTransfer from "./routes/IBCTransfer";
 import DataSource from "./routes/DataSource";
 import OracleScript from "./routes/OracleScript";
+import AccountPage from "./routes/AccountPage";
+import Validators from "./routes/Validators";
+import Delegations from "./routes/Delegations";
+import DelegatorDetails from "./routes/DelegatorDetails";
 
 const BackRoute = () => {
   const location = useLocation();
-  if (location.pathname !== "/") {
+  if (location.pathname !== "/" && !location.pathname.includes("/myaccount")) {
     return <BackButton />;
   }
   return null;
 };
 
 function App() {
+  const wallet = useSelector((state) => state.wallet);
+
   return (
     <BrowserRouter>
       <div className="App md:p-6 p-3">
         <Navbar />
-        <div className="container mx-auto max-w-full">
-          <div className="card bg-white md:p-10 p-5 rounded-2xl mt-5">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/sendToken" element={<SendToken />} />
-              <Route path="/request" element={<SendRequest />} />
-              <Route path="/getprice" element={<GetPrice />} />
-              <Route path="/delegate" element={<Delegate />} />
-              <Route path="/transfer" element={<IBCTransfer />} />
-              <Route path="/datasource" element={<DataSource />} />
-              <Route path="/oraclescript" element={<OracleScript />} />
-            </Routes>
-            <BackRoute />
-          </div>
-        </div>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/sendToken" element={<SendToken />} />
+          <Route exact path="/request" element={<SendRequest />} />
+          <Route exact path="/getprice" element={<GetPrice />} />
+          <Route exact path="/delegate" element={<Delegate />} />
+          <Route exact path="/transfer" element={<IBCTransfer />} />
+          <Route exact path="/datasource" element={<DataSource />} />
+          <Route exact path="/oraclescript" element={<OracleScript />} />
+          <Route
+            exact
+            path="/myaccount"
+            element={wallet.address ? <AccountPage /> : <Navigate to="/" />}
+          >
+            <Route path="validators" element={<Validators />} />
+            <Route path="delegations" element={<Delegations />}>
+              <Route path=":operator" element={<DelegatorDetails />} />
+            </Route>
+          </Route>
+        </Routes>
+        <BackRoute />
         <Footer />
       </div>
     </BrowserRouter>

@@ -6,16 +6,18 @@ export default function AccountWithBalance() {
   const wallet = useSelector((state) => state.wallet);
   const [fullAddress, setFullAddress] = useState("");
   const [copied, setcopied] = useState(false);
-  const [account, setaccount] = useState("");
+  const [accountAddress, setaccountAddress] = useState("");
+  const [accountBalance, setAccountBalance] = useState(0);
 
   useEffect(() => {
     if (wallet.address) {
       const orgStr = wallet.address;
       const subStr = orgStr.substr(0, 20) + "..." + orgStr.substr(orgStr.length - 4, orgStr.length);
-      setaccount(subStr);
+      setaccountAddress(subStr);
       setFullAddress(orgStr);
+      setAccountBalance(wallet.balance);
     } else {
-      setaccount("");
+      setaccountAddress("");
       setFullAddress("");
     }
   }, [wallet]);
@@ -27,7 +29,7 @@ export default function AccountWithBalance() {
           <img src="/images/avatar-4.png" alt="" />
         </div>
         <div className="flex items-center">
-          <h3 className="text-lg font-bold">{account} </h3>
+          <h3 className="text-lg font-bold">{accountAddress} </h3>
           <div className="relative">
             <CopyToClipboard text={fullAddress} onCopy={() => setcopied(true)}>
               <button className="ml-3 hover:text-orange group relative">
@@ -55,7 +57,9 @@ export default function AccountWithBalance() {
       </div>
       <div className="account-balance">
         <p className="text-right text-gray-500">Available Balance:</p>
-        <h3 className="text-3xl font-bold text-right">222.39 BAND</h3>
+        <h3 className="text-3xl font-bold text-right">
+          {accountBalance ? <div>{accountBalance}</div> : "0"} BAND
+        </h3>
       </div>
     </div>
   );

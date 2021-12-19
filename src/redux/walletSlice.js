@@ -3,8 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   address: null,
   name: "",
-  privateKey: "",
-  pubkey: "",
+  privateKey: null,
+  pubkey: null,
+  balance: 0,
 };
 
 export const walletSlice = createSlice({
@@ -16,12 +17,14 @@ export const walletSlice = createSlice({
       state.name = action.payload.name;
       state.privateKey = action.payload.privateKey;
       state.pubkey = action.payload.pubkey;
+      state.balance = action.payload.balance;
     },
     removeWallet: (state, action) => {
       state.address = null;
       state.name = "";
-      state.privateKey = "";
-      state.pubkey = "";
+      state.privateKey = null;
+      state.pubkey = null;
+      state.balance = 0;
     },
   },
 });
