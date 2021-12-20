@@ -9,7 +9,7 @@ import { store } from "./redux/store";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "http://graphql-lt4.bandchain.org/v1/graphql",
+  uri: "https://graphql-lt4.bandchain.org/v1/graphql",
   cache: new InMemoryCache(),
 });
 
