@@ -10,6 +10,7 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-rust";
 // import "prismjs/themes/prism.css";
 import "prismjs/themes/prism-tomorrow.css";
+import axios from "axios";
 
 export default function FormCreateOracleScript() {
   const wallet = useSelector((state) => state.wallet);
@@ -145,7 +146,8 @@ export default function FormCreateOracleScript() {
   };
 
   const submitCode = async () => {
-    alert("MsgCreateDataSource not found");
+    console.log(codeEditor);
+    // alert("MsgCreateDataSource not found");
     // const response = await createDataSource(
     //   dsname,
     //   codeType === "upload" ? code : window.btoa(codeEditor),
@@ -157,6 +159,24 @@ export default function FormCreateOracleScript() {
     //   dsdesc
     // );
     // console.log(response);
+
+    axios
+      .post(`https://play.rust-lang.org/compile`, {
+        assemblyFlavor: "att",
+        backtrace: false,
+        channel: "nightly",
+        code: codeEditor,
+        crateType: "bin",
+        demangleAssembly: "demangle",
+        edition: "2021",
+        mode: "debug",
+        processAssembly: "filter",
+        target: "wasm",
+        tests: false,
+      })
+      .then((res) => {
+        console.log(res);
+      });
   };
 
   // Effects
@@ -217,7 +237,7 @@ export default function FormCreateOracleScript() {
                           htmlFor="input-address"
                           className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                         Oracle Script Name <span className="text-orange">*</span>
+                          Oracle Script Name <span className="text-orange">*</span>
                         </label>
                         <input
                           className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
@@ -395,7 +415,7 @@ export default function FormCreateOracleScript() {
                         Previous
                       </button>
                       <button
-                        onClick={submitCode()}
+                        onClick={(e) => submitCode()}
                         className="button block text-md text-white bg-black hover:bg-black border-2 border-black focus:outline-none focus:ring-black focus:ring-opacity-50  py-2 px-10 rounded-xl focus:outline-none"
                       >
                         Confirm and Deploy
