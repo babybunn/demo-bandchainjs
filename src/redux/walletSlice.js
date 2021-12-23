@@ -17,7 +17,6 @@ export const walletSlice = createSlice({
       state.name = action.payload.name;
       state.privateKey = action.payload.privateKey;
       state.pubkey = action.payload.pubkey;
-      state.balance = action.payload.balance;
     },
     removeWallet: (state, action) => {
       state.address = null;
@@ -26,9 +25,12 @@ export const walletSlice = createSlice({
       state.pubkey = null;
       state.balance = 0;
     },
+    updateBalance: (state, action) => {
+      state.balance = action.payload.balance;
+    },
   },
 });
 
-export const { addWallet, removeWallet } = walletSlice.actions;
+export const { addWallet, removeWallet, updateBalance } = walletSlice.actions;
 
 export default walletSlice.reducer;

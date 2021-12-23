@@ -37,6 +37,7 @@ module.exports = {
       yellow: colors.amber,
       pink: colors.pink,
       purple: colors.violet,
+      green: colors.green,
       blue: {
         light: "#464cf2",
         DEFAULT: "#1820ef",
@@ -48,21 +49,27 @@ module.exports = {
         dark: "#e5463b",
       },
       warmGray: colors.warmGray,
+      teal: colors.teal,
+      line: colors.lime,
+      rose: colors.rose,
     },
     extend: {
       boxShadow: {
         blue: "0 4px 14px 0 rgba(19, 51, 81, 0.39)",
         indigo:
           "0 10px 15px -3px rgba(199, 210, 254, 0.1), 0 4px 6px -2px rgba(199, 210, 254, 0.3)",
+        insetBlack: "inset 0 -2px 0 0 rgba(0,0,0,1)",
       },
     },
   },
   variants: {
     extend: {
+      backgroundColor: ["disabled"],
       opacity: ["disabled"],
       transform: ["hover", "focus"],
-      borderWidth: ["hover", "focus"],
+      borderWidth: ["hover", "focus", "disabled"],
       visibility: ["hover", "focus", "group-hover"],
+      boxShadow: ["disabled"],
     },
   },
   plugins: [],

@@ -1,42 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getWallet } from "../band";
 import { useDispatch } from "react-redux";
-import { addWallet } from "../redux/walletSlice";
-import { gql, useLazyQuery } from "@apollo/client";
+import { addWallet, updateBalance } from "../redux/walletSlice";
+import { gql, useLazyQuery, useSubscription } from "@apollo/client";
+import { useSelector } from "react-redux";
 
 export default function FormConnectWallet() {
+  const wallet = useSelector((state) => state.wallet);
   const dispatch = useDispatch();
   const [mnemonic, setMnemonic] = useState("");
 
+  // const GET_BALANCE = gql`
+  //   query GetBalance($address: String!) {
+  //     accounts(where: { address: { _eq: $address } }) {
+  //       balance
+  //     }
+  //   }
+  // `;
+
   const GET_BALANCE = gql`
-    query GetBalance($address: String!) {
+    subscription GetBalance($address: String!) {
       accounts(where: { address: { _eq: $address } }) {
         balance
       }
     }
   `;
 
-  const [getBalance, { error, data }] = useLazyQuery(GET_BALANCE);
+  // const [getBalance, { loading, error, data }] = useLazyQuery(GET_BALANCE);
+  const { loading, error, data } = useSubscription(GET_BALANCE, {
+    variables: { address: wallet.address },
+  });
+
+  useEffect(() => {
+    // getBalance({ variables: { address: wallet.address } });
+    if (data && data.accounts[0]) {
+      const uband = data.accounts[0].balance.split("uband")[0];
+      dispatch(
+        updateBalance({
+          balance: uband / 1e6,
+        })
+      );
+    }
+    if (loading) console.error(loading);
+    if (error) console.error(error);
+  }, [wallet, data]);
 
   const handleConnectButton = (e) => {
+    e.preventDefault();
     if (mnemonic.length > 0 && mnemonic !== "") {
       const { sender, privateKey, pubkey } = getWallet(mnemonic);
-
       if (sender) {
-        getBalance({ variables: { address: sender } });
-        if (data) {
-          const uband = data.accounts[0].balance.split("uband")[0];
-          dispatch(
-            addWallet({
-              address: sender,
-              name: sender,
-              privateKey: privateKey,
-              pubkey: pubkey,
-              balance: uband / 1e6,
-            })
-          );
-        }
-        if (error) console.error(error);
+        dispatch(
+          addWallet({
+            address: sender,
+            name: sender,
+            privateKey: privateKey,
+            pubkey: pubkey,
+          })
+        );
       }
     }
   };
@@ -50,7 +71,7 @@ export default function FormConnectWallet() {
               Enter mnemonic phrase
             </label>
             <input
-              className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+              className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
               type="text"
               id="input-address"
               valur={mnemonic}

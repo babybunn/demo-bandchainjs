@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Routes, Route } from "react-router-dom";
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery, useSubscription } from "@apollo/client";
 import { SingleDelegator } from "../components/SingleDelegator";
 import DelegatorDetails from "./DelegatorDetails";
 
 export default function Delegations() {
   const wallet = useSelector((state) => state.wallet);
   useEffect(() => {
-    getDelegators({ variables: { address: wallet.address } });
+    // getDelegators({ variables: { address: wallet.address } });
   }, []);
 
   const GET_DELEGATIONS = gql`
-    query GetAccountDelegations($address: String!) {
-      delegations_view(where: { delegator_address: { _eq: $address } }) {
+    subscription GetAccountDelegations($address: String!) {
+      delegations_view(
+        where: { delegator_address: { _eq: $address } }
+        order_by: { moniker: asc }
+      ) {
         amount
         moniker
         reward
@@ -24,7 +27,10 @@ export default function Delegations() {
   `;
 
   //   const { loading, error, data } = useQuery(GET_DELEGATIONS);
-  const [getDelegators, { loading, error, data }] = useLazyQuery(GET_DELEGATIONS);
+  // const [getDelegators, { loading, error, data }] = useLazyQuery(GET_DELEGATIONS);
+  const { loading, error, data } = useSubscription(GET_DELEGATIONS, {
+    variables: { address: wallet.address },
+  });
 
   return (
     <div>

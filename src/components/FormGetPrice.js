@@ -69,7 +69,7 @@ function FormGetPrice() {
                   Token Pair
                 </label>
                 <input
-                  className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                  className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                   type="text"
                   id="input-address"
                   placeholder="e.g. BTC/USD,ETH/USD"
@@ -85,7 +85,7 @@ function FormGetPrice() {
                   Ask Count
                 </label>
                 <input
-                  className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                  className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                   type="text"
                   id="input-address"
                   value={askCount}
@@ -100,7 +100,7 @@ function FormGetPrice() {
                   Min Count
                 </label>
                 <input
-                  className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                  className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                   type="text"
                   id="input-address"
                   value={minCount}

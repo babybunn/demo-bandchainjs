@@ -221,7 +221,7 @@ export default function FormCreateDataSource() {
                           Data Source Name <span className="text-orange">*</span>
                         </label>
                         <input
-                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                           type="text"
                           id="input-address"
                           onChange={(e) => setdsname(e.target.value)}
@@ -236,7 +236,7 @@ export default function FormCreateDataSource() {
                           Owner Address <span className="text-orange">*</span>
                         </label>
                         <input
-                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                           type="text"
                           id="input-owner"
                           value={owner}
@@ -251,7 +251,7 @@ export default function FormCreateDataSource() {
                           Treasury Address <span className="text-orange">*</span>
                         </label>
                         <input
-                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                           type="text"
                           id="input-treasury"
                           value={treasury}
@@ -266,7 +266,7 @@ export default function FormCreateDataSource() {
                           Description
                         </label>
                         <textarea
-                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                          className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                           type="text"
                           id="input-desc"
                           onChange={(e) => setdsdesc(e.target.value)}

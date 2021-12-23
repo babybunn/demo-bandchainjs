@@ -85,7 +85,7 @@ function FormDelegate() {
                       Delegate to
                     </label>
                     <input
-                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                       type="text"
                       id="input-address"
                       value={validator}
@@ -100,7 +100,7 @@ function FormDelegate() {
                       Token Amount (BAND)
                     </label>
                     <input
-                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                       type="number"
                       step="0.01"
                       id="input-amount"

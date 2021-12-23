@@ -21,6 +21,8 @@ import AccountPage from "./routes/AccountPage";
 import Validators from "./routes/Validators";
 import Delegations from "./routes/Delegations";
 import DelegatorDetails from "./routes/DelegatorDetails";
+import CreateOracleScript from "./routes/CreateOracleScript";
+import EditOracleScript from "./routes/EditOracleScript";
 
 const BackRoute = () => {
   const location = useLocation();
@@ -46,6 +48,8 @@ function App() {
           <Route exact path="/transfer" element={<IBCTransfer />} />
           <Route exact path="/datasource" element={<DataSource />} />
           <Route exact path="/oraclescript" element={<OracleScript />} />
+          <Route exact path="/oraclescript/createos" element={<CreateOracleScript />} />
+          <Route exact path="/oraclescript/editos" element={<EditOracleScript />} />
           <Route
             exact
             path="/myaccount"

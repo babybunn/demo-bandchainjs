@@ -10,7 +10,7 @@ function FormSendRequest() {
   const [isConnected, setisConnected] = useState(false);
 
   const [sendResultError, setSendResultError] = useState("");
-  const [sendResult, setSendResult] = useState([]);
+  // const [sendResult, setSendResult] = useState([]);
   const [symbols, setSymbols] = useState("");
   const [multiplierInput, setMultiplierInput] = useState("");
   const [feeInput, setFeeInput] = useState("");
@@ -38,17 +38,11 @@ function FormSendRequest() {
       prepareGasInput,
       executeGasInput
     );
-    // console.log(requestID)
     if (requestID.data === "") {
       setSendResultError(requestID.rawLog);
     }
 
-    if (requestID.data !== "") {
-      console.log(requestID);
-      setSendResult(requestID.logsList[0].eventsList[2].attributesList);
-      console.log(sendResult);
-    }
-    setTransactions(requestID.txhash);
+    setTransactions([requestID.txhash]);
     setLoading(Boolean(0));
   };
 
@@ -86,7 +80,7 @@ function FormSendRequest() {
                       Symbols (Separate with comma)
                     </label>
                     <input
-                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                       type="text"
                       id="input-address"
                       value={symbols}
@@ -102,7 +96,7 @@ function FormSendRequest() {
                       Multiplier (u64)
                     </label>
                     <input
-                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                       min="0"
                       type="number"
                       id="input-multiplier"
@@ -118,7 +112,7 @@ function FormSendRequest() {
                       Fee Limit (uband)
                     </label>
                     <input
-                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                       min="0"
                       type="number"
                       id="input-fee"
@@ -134,7 +128,7 @@ function FormSendRequest() {
                       Prepare Gas
                     </label>
                     <input
-                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                       min="0"
                       type="number"
                       id="input-gas1"
@@ -150,7 +144,7 @@ function FormSendRequest() {
                       Execute Gas
                     </label>
                     <input
-                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-md"
+                      className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
                       min="0"
                       type="number"
                       id="input-gas2"

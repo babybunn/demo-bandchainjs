@@ -1,8 +1,14 @@
 import { Client, Wallet, Obi, Message, Coin, Transaction, Fee } from "@bandprotocol/bandchain.js";
+import { MsgBeginRedelegate } from "@bandprotocol/bandchain.js/proto/cosmos/staking/v1beta1/tx_pb";
 import moment from "moment";
 
 const grpcUrl = "https://laozi-testnet4.bandchain.org/grpc-web";
 const client = new Client(grpcUrl);
+
+export async function getPairPrice(pair, minCount, askCount) {
+  const data = await client.getReferenceData(pair, minCount, askCount);
+  return data;
+}
 
 export function getWallet(mnemonic) {
   const { PrivateKey } = Wallet;
@@ -48,44 +54,31 @@ export async function makeRequest(symbols, multiplier, feeInput, prepareGas, exe
     executeGas
   );
 
-  let feeCoin = new Coin();
-  feeCoin.setDenom("uband");
-  feeCoin.setAmount("50000");
-
-  // Step 3.1: Construct a transaction
-  const fee = new Fee();
-  fee.setAmountList([feeCoin]);
-  fee.setGasLimit(10000000);
-
-  const chainId = await client.getChainId();
-  const txn = new Transaction();
-  txn.withMessages(requestMessage);
-  await txn.withSender(client, sender);
-  txn.withChainId(chainId);
-  txn.withFee(fee);
-  txn.withMemo("Test Send Oracle Request from Babybun");
-
-  // Step 3.2: Sign the transaction using the private key
-  const signDoc = txn.getSignDoc(pubkey);
-  const signature = privateKey.sign(signDoc);
-
-  const txRawBytes = txn.getTxData(signature, pubkey);
+  const txRawBytes = await createSignedTransaction(requestMessage, sender, pubkey, privateKey);
 
   // Step 4: Broadcast the transaction
   const sendTx = await client.sendTxBlockMode(txRawBytes);
-  console.log(sendTx);
+  // console.log(sendTx);
+  // if (sendTx) decodeData(obi.encodeOutput(calldata).toString("hex"));
+
   return sendTx;
 }
 
-export const sendCoin = async (
-  address,
-  amount,
-  privateKey,
-  pubkey,
-  sender,
-  action = "send",
-  chainId = "band-laozi-testnet4"
-) => {
+function decodeData(data) {
+  const obi = new Obi("{symbols:[string],multiplier:u64}/{rates:[u64]}");
+  const dataBuffer = Buffer.from(data, "hex");
+  // const decoded = obi.decodeOutput(
+  //   Buffer.from(
+  //     "0000086df1baab00000000000200000009436f696e4765636b6f000000005eca223d0000000d43727970746f436f6d70617265000000005eca2252",
+  //     "hex"
+  //   )
+  // );
+  // const decode = obi.decodeOutput(dataBuffer).toString("hex");
+  // console.log(decode);
+  console.log(obi.decodeOutput(dataBuffer));
+}
+
+export const sendCoin = async (address, amount, privateKey, pubkey, sender, action = "send") => {
   const { MsgSend, MsgDelegate } = Message;
 
   const receiver = address;
@@ -98,30 +91,56 @@ export const sendCoin = async (
       ? new MsgDelegate(sender, receiver, sendAmount)
       : new MsgSend(sender, receiver, [sendAmount]);
 
-  const account = await client.getAccount(sender);
-  console.log(account);
-
-  let feeCoin = new Coin();
-  feeCoin.setDenom("uband");
-  feeCoin.setAmount("1000");
-
-  const fee = new Fee();
-  fee.setAmountList([feeCoin]);
-  fee.setGasLimit(1000000);
-  const tx = new Transaction()
-    .withMessages(msg)
-    .withAccountNum(account.accountNumber)
-    .withSequence(account.sequence)
-    .withChainId(chainId)
-    .withFee(fee);
-
-  // Step 4 sign the transaction
-  const txSignData = tx.getSignDoc(pubkey);
-  const signature = privateKey.sign(txSignData);
-  const signedTx = tx.getTxData(signature, pubkey);
+  const txRawBytes = await createSignedTransaction(msg, sender, pubkey, privateKey);
 
   // Step 5 send the transaction
-  const response = await client.sendTxBlockMode(signedTx);
+  const response = await client.sendTxBlockMode(txRawBytes);
+
+  return response;
+};
+
+export const undelegateCoin = async (operator, amount, privateKey, pubkey, sender) => {
+  const sendAmount = new Coin();
+  sendAmount.setDenom("uband");
+  sendAmount.setAmount((amount * 1e6).toString());
+
+  const { MsgUndelegate } = Message;
+  const msg = new MsgUndelegate(sender, operator, sendAmount);
+  const txRawBytes = await createSignedTransaction(msg, sender, pubkey, privateKey);
+  const response = await client.sendTxBlockMode(txRawBytes);
+
+  return response;
+};
+
+export const reDelegateCoin = async (
+  srcOperator,
+  destOperator,
+  amount,
+  privateKey,
+  pubkey,
+  sender
+) => {
+  const sendAmount = new Coin();
+  sendAmount.setDenom("uband");
+  sendAmount.setAmount((amount * 1e6).toString());
+
+  const { MsgBeginRedelegate } = Message;
+  const msg = new MsgBeginRedelegate(sender, srcOperator, destOperator, sendAmount);
+  const txRawBytes = await createSignedTransaction(msg, sender, pubkey, privateKey);
+  const response = await client.sendTxBlockMode(txRawBytes);
+
+  return response;
+};
+
+export const reinvestRewards = async (validator, privateKey, pubkey, sender) => {
+  // const sendAmount = new Coin();
+  // sendAmount.setDenom("uband");
+  // sendAmount.setAmount((amount * 1e6).toString());
+
+  const { MsgWithdrawDelegatorReward } = Message;
+  const msg = new MsgWithdrawDelegatorReward(sender, validator);
+  const txRawBytes = await createSignedTransaction(msg, sender, pubkey, privateKey);
+  const response = await client.sendTxBlockMode(txRawBytes);
 
   return response;
 };
@@ -145,27 +164,7 @@ export const sendIBC = async (address, amount, privateKey, pubkey, sender) => {
     timeoutTimestamp
   );
 
-  // Step 3.2 constructs a transaction
-  const account = await client.getAccount(sender);
-
-  let feeCoin = new Coin();
-  feeCoin.setDenom("uband");
-  feeCoin.setAmount("1000");
-
-  const fee = new Fee();
-  fee.setAmountList([feeCoin]);
-  fee.setGasLimit(1000000);
-  const tx = new Transaction()
-    .withMessages(msg)
-    .withAccountNum(account.accountNumber)
-    .withSequence(account.sequence)
-    .withChainId("band-laozi-testnet4")
-    .withFee(fee);
-
-  // Step 4 sign the transaction
-  const txSignData = tx.getSignDoc(pubkey);
-  const signature = privateKey.sign(txSignData);
-  const signedTx = tx.getTxData(signature, pubkey);
+  const signedTx = await createSignedTransaction(msg, sender, pubkey, privateKey);
 
   // Step 5 send the transaction
   const response = await client.sendTxBlockMode(signedTx);
@@ -188,27 +187,11 @@ export const createDataSource = async (
   feeCoin.setDenom("uband");
   feeCoin.setAmount("1000");
 
-  const msg = MsgCreateDataSource(title, code, [feeCoin], treasury, owner, sender);
+  const msg = MsgCreateDataSource(title, code, [feeCoin], treasury, owner, sender, desc);
 
   // const msg = new Message.MsgCreateDataSource(title, code, [feeCoin], treasury, owner, sender);
 
-  const fee = new Fee();
-  fee.setAmountList([feeCoin]);
-  fee.setGasLimit(1000000);
-
-  const account = await client.getAccount(sender);
-
-  const tx = new Transaction()
-    .withMessages(msg)
-    .withAccountNum(account.accountNumber)
-    .withSequence(account.sequence)
-    .withChainId("band-laozi-testnet4")
-    .withFee(fee);
-
-  // Step 4 sign the transaction
-  const txSignData = tx.getSignDoc(pubkey);
-  const signature = privateKey.sign(txSignData);
-  const signedTx = tx.getTxData(signature, pubkey);
+  const signedTx = await createSignedTransaction(msg, sender, pubkey, privateKey);
 
   // Step 5 send the transaction
   const response = await client.sendTxBlockMode(signedTx);
@@ -223,26 +206,209 @@ export const editDataSource = async (id, code, sender, owner, privateKey, pubkey
 
   const msg = new Message.MsgEditDataSource(parseInt(id), code, [feeCoin], owner, sender);
 
-  const fee = new Fee();
-  fee.setAmountList([feeCoin]);
-  fee.setGasLimit(1000000);
-
-  const account = await client.getAccount(sender);
-
-  const tx = new Transaction()
-    .withMessages(msg)
-    .withAccountNum(account.accountNumber)
-    .withSequence(account.sequence)
-    .withChainId("band-laozi-testnet4")
-    .withFee(fee);
-
-  // Step 4 sign the transaction
-  const txSignData = tx.getSignDoc(pubkey);
-  const signature = privateKey.sign(txSignData);
-  const signedTx = tx.getTxData(signature, pubkey);
+  const signedTx = await createSignedTransaction(msg, sender, pubkey, privateKey);
 
   // Step 5 send the transaction
   const response = await client.sendTxBlockMode(signedTx);
 
   return response;
 };
+
+export async function createOracleScript(
+  title,
+  desc,
+  schema,
+  source_code_url,
+  code,
+  sender,
+  owner,
+  privateKey,
+  pubkey
+) {
+  let coin = new Coin();
+  coin.setDenom("uband");
+  coin.setAmount("1000000");
+
+  let feeCoin = new Coin();
+  feeCoin.setDenom("uband");
+  feeCoin.setAmount("1000");
+
+  const requestMessage = new Message.MsgCreateOracleScript(
+    title,
+    desc,
+    schema,
+    source_code_url,
+    Buffer.from(code),
+    owner,
+    sender
+  );
+
+  const signedTx = await createSignedTransaction(requestMessage, sender, pubkey, privateKey);
+  const sendTx = await client.sendTxBlockMode(signedTx);
+
+  return sendTx;
+}
+
+export async function createMsgEditOS(
+  id,
+  title,
+  desc,
+  schema,
+  source_code_url,
+  code,
+  sender,
+  owner,
+  privateKey,
+  pubkey
+) {
+  let coin = new Coin();
+  coin.setDenom("uband");
+  coin.setAmount("1000000");
+
+  let feeCoin = new Coin();
+  feeCoin.setDenom("uband");
+  feeCoin.setAmount("1000");
+
+  const requestMessage = new Message.MsgEditOracleScript(
+    id,
+    title,
+    desc,
+    schema,
+    source_code_url,
+    Buffer.from(code),
+    owner,
+    sender
+  );
+
+  const signedTx = await createSignedTransaction(requestMessage, sender, pubkey, privateKey);
+  const sendTx = await client.sendTxBlockMode(signedTx);
+
+  return sendTx;
+}
+
+export async function getRawPreview(
+  title,
+  desc,
+  schema,
+  source_code_url,
+  code,
+  sender,
+  owner,
+  privateKey,
+  pubkey
+) {
+  let coin = new Coin();
+  coin.setDenom("uband");
+  coin.setAmount("1000000");
+
+  let feeCoin = new Coin();
+  feeCoin.setDenom("uband");
+  feeCoin.setAmount("1000");
+
+  const requestMessage = new Message.MsgCreateOracleScript(
+    title,
+    desc,
+    schema,
+    source_code_url,
+    Buffer.from(code),
+    owner,
+    sender
+  );
+
+  const fee = new Fee();
+  fee.setAmountList([feeCoin]);
+  fee.setGasLimit(1000000);
+  const chainId = await client.getChainId();
+  const txn = new Transaction();
+  txn.withMessages(requestMessage);
+  await txn.withSender(client, sender);
+  txn.withChainId(chainId);
+  txn.withFee(fee);
+  txn.withMemo("");
+
+  const signDoc = txn.getSignDoc(pubkey);
+  const signature = privateKey.sign(signDoc);
+
+  const txRawBytes = txn.getTxData(signature, pubkey);
+
+  return txRawBytes;
+}
+
+export async function getRawPreviewEditOs(
+  title,
+  desc,
+  schema,
+  source_code_url,
+  code,
+  sender,
+  owner,
+  privateKey,
+  pubkey
+) {
+  let coin = new Coin();
+  coin.setDenom("uband");
+  coin.setAmount("1000000");
+
+  let feeCoin = new Coin();
+  feeCoin.setDenom("uband");
+  feeCoin.setAmount("1000");
+
+  const requestMessage = new Message.MsgCreateOracleScript(
+    title,
+    desc,
+    schema,
+    source_code_url,
+    Buffer.from(code),
+    owner,
+    sender
+  );
+
+  const fee = new Fee();
+  fee.setAmountList([feeCoin]);
+  fee.setGasLimit(1000000);
+  const chainId = await client.getChainId();
+  const txn = new Transaction();
+  txn.withMessages(requestMessage);
+  await txn.withSender(client, sender);
+  txn.withChainId(chainId);
+  txn.withFee(fee);
+  txn.withMemo("");
+
+  const signDoc = txn.getSignDoc(pubkey);
+  const signature = privateKey.sign(signDoc);
+
+  const txRawBytes = txn.getTxData(signature, pubkey);
+
+  return txRawBytes;
+}
+
+export async function withdrawReward(delegator, validator, sender, pubkey, privateKey) {
+  const msg = new Message.MsgWithdrawDelegatorReward(delegator, validator);
+  const signedTx = await createSignedTransaction(msg, sender, pubkey, privateKey);
+  const response = await client.sendTxBlockMode(signedTx);
+  return response;
+}
+
+export async function createSignedTransaction(msg, sender, pubkey, privateKey) {
+  let feeCoin = new Coin();
+  feeCoin.setDenom("uband");
+  feeCoin.setAmount("1000");
+
+  const fee = new Fee();
+  fee.setAmountList([feeCoin]);
+  fee.setGasLimit(1000000);
+  const chainId = await client.getChainId();
+  const txn = new Transaction();
+  txn.withMessages(msg);
+  await txn.withSender(client, sender);
+  txn.withChainId(chainId);
+  txn.withFee(fee);
+  txn.withMemo("From Bandchain.js Demo App");
+
+  const signDoc = txn.getSignDoc(pubkey);
+  const signature = privateKey.sign(signDoc);
+
+  const txRawBytes = txn.getTxData(signature, pubkey);
+
+  return txRawBytes;
+}
