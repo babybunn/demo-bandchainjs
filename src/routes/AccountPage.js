@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Validators from "./Validators";
 import Delegations from "./Delegations";
 import DelegatorDetails from "./DelegatorDetails";
+import Converter from "./Converter";
 
 export default function AccountPage() {
   return (
@@ -16,6 +17,7 @@ export default function AccountPage() {
             <Route path="delegations" element={<Delegations />}>
               <Route path=":operator" element={<DelegatorDetails />} />
             </Route>
+            <Route path="converter" element={<Converter />} />
           </Routes>
         </div>
       </div>

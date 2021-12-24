@@ -66,7 +66,10 @@ export async function makeRequest(symbols, multiplier, feeInput, prepareGas, exe
 
 function decodeData(data) {
   const obi = new Obi("{symbols:[string],multiplier:u64}/{rates:[u64]}");
-  const dataBuffer = Buffer.from(data, "hex");
+  const dataBuffer = Buffer.from(
+    "0000000400000003455448000000054d41544943000000034254430000000455534443000000003b9aca00",
+    "hex"
+  );
   // const decoded = obi.decodeOutput(
   //   Buffer.from(
   //     "0000086df1baab00000000000200000009436f696e4765636b6f000000005eca223d0000000d43727970746f436f6d70617265000000005eca2252",
