@@ -56,12 +56,12 @@ export default function Converter() {
         <strong>Cryptocurrency Converter Calculator</strong>
       </h1>
       <div className="">
-        <div className="form-converter-group flex gap-2 items-center">
+        <div className="form-converter-group md:flex gap-2 items-center">
           <div className="form flex-1 flex-grow">
             <label className="text-gray-400 font-medium">From</label>
             <div className="input-group mb-3">
               <select
-                className="border-2 border-gray-200 rounded-xl w-full px-3 py-2"
+                className="bg-white border-2 border-gray-200 rounded-xl w-full px-3 py-2"
                 onChange={(e) => handleSelectSourceChanged(e)}
                 value={symbolSource}
               >
@@ -80,7 +80,7 @@ export default function Converter() {
               />
             </div>
           </div>
-          <div className="mt-3 w-10 h-10 border-2 border-black rounded-full flex items-center justify-center bg-orange">
+          <div className="mx-auto mt-3 w-10 h-10 border-2 border-black rounded-full flex items-center justify-center bg-orange">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -100,7 +100,7 @@ export default function Converter() {
             <label className="text-gray-400 font-medium">To</label>
             <div className="input-group mb-3">
               <select
-                className="border-2 border-gray-200 rounded-xl w-full px-3 py-2"
+                className="bg-white border-2 border-gray-200 rounded-xl w-full px-3 py-2"
                 onChange={(e) => handleSelectDestChanged(e)}
                 value={symbolDest}
               >
