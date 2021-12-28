@@ -2,7 +2,7 @@
   "dependencies": {
     "express": "^4.17.2"
   },
-  "name": "server",
+  "name": "demo-bandchainjs",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,7 +10,6 @@
     "start": "node server/index.js",
     "build": "cd client && yarn && yarn build"
   },
-  "engines": {
-    "node": "14.18.1"
-  }
+  "repository": "git@github.com:pangthebabydustbunny/demo-bandchainjs.git",
+  "author": "babybun <wpakasame@gmail.com>"
 }
