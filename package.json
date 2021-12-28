@@ -1,0 +1,11 @@
+{
+  "name": "bandchain-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:pangthebabydustbunny/demo-bandchainjs.git",
+  "author": "babybun <wpakasame@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "cd client && yarn && yarn build"
+  }
+}
