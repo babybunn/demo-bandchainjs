@@ -7,7 +7,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server/index.js",
     "build": "cd client && yarn && yarn build"
   },
   "engines": {
