@@ -72,7 +72,7 @@ export default function FormCreateOracleScript() {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "text/x-python-script",
+    accept: "text/x-rustsrc",
   });
 
   const renderSwitchCode = () => {
