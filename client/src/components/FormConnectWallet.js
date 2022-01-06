@@ -48,14 +48,12 @@ export default function FormConnectWallet() {
   const handleConnectButton = (e) => {
     e.preventDefault();
     if (mnemonic.length > 0 && mnemonic !== "") {
-      const { sender, privateKey, pubkey } = getWallet(mnemonic);
-      if (sender) {
+      const { walletAddress } = getWallet(mnemonic);
+      if (walletAddress) {
         dispatch(
           addWallet({
-            address: sender,
-            name: sender,
-            privateKey: privateKey,
-            pubkey: pubkey,
+            address: walletAddress,
+            mnemonic: mnemonic,
           })
         );
       }

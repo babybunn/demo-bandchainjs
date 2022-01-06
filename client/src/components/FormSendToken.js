@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { sendCoin } from "../band";
+
+import { Message, Coin } from "@bandprotocol/bandchain.js";
 import Loading from "./Loading";
+import { broadCastTx } from "../band";
 import { useSelector } from "react-redux";
 import UnableService from "./UnableService";
 import AccountWithBalance from "./AccountWithBalance";
@@ -32,21 +34,27 @@ function FormSendToken() {
   };
   const sendBandToken = async () => {
     if (!receiverAddress && !tokenAmount) return;
-    setLoading(Boolean(1));
-    const response = await sendCoin(
-      receiverAddress,
-      tokenAmount,
-      wallet.privateKey,
-      wallet.pubkey,
-      wallet.address
-    );
-    console.log(response);
+    setLoading(true);
+    const response = await sendCoin();
     if (response.data === "") setSendResult(response.rawLog);
     if (response.data !== "") {
       setTransactions((transactions) => [...transactions, response.txhash]);
       setSendResultSuccess(response.txhash);
     }
-    setLoading(Boolean(0));
+    setLoading(false);
+  };
+
+  const sendCoin = async () => {
+    const { MsgSend } = Message;
+
+    const sendAmount = new Coin();
+    sendAmount.setDenom("uband");
+    sendAmount.setAmount((tokenAmount * 1e6).toString());
+
+    const msg = new MsgSend(wallet.address, receiverAddress, [sendAmount]);
+    const response = await broadCastTx(msg, wallet.mnemonic);
+
+    return response;
   };
 
   return (

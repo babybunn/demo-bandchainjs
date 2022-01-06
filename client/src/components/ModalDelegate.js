@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
-import { sendCoin, undelegateCoin } from "../band";
+import { Message, Coin } from "@bandprotocol/bandchain.js";
+import { undelegateCoin, broadCastTx } from "../band";
 import { useSelector } from "react-redux";
 import { ModalDelegateContext } from "../app-context";
 
@@ -28,10 +29,25 @@ export default function ModalDelegate({ title, operator }) {
             wallet.address,
             "delegate"
           )
-        : await undelegateCoin(operator, amount, wallet.privateKey, wallet.pubkey, wallet.address);
+        : await undelegateCoin(operator, amount, wallet);
     if (response) {
       settxhash(response.txhash);
     }
+  };
+
+  const sendCoin = async () => {
+    const { MsgDelegate } = Message;
+
+    const sendAmount = new Coin();
+    sendAmount.setDenom("uband");
+    sendAmount.setAmount((amount * 1e6).toString());
+
+    const msg = new MsgDelegate(wallet.address, operator, sendAmount);
+
+    // Step 5 send the transaction
+    const response = await broadCastTx(msg, wallet.mnemonic);
+
+    return response;
   };
 
   return (

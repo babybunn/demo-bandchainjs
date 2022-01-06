@@ -149,11 +149,9 @@ export default function FormCreateDataSource() {
     // const response = await createDataSource(
     //   dsname,
     //   codeType === "upload" ? code : window.btoa(codeEditor),
-    //   wallet.address,
     //   owner,
     //   treasury,
-    //   wallet.privateKey,
-    //   wallet.pubkey,
+    //   wallet,
     //   dsdesc
     // );
     // console.log(response);

@@ -12,7 +12,7 @@ export default function AccountWithBalance() {
   useEffect(() => {
     if (wallet.address) {
       const orgStr = wallet.address;
-      const subStr = orgStr.substr(0, 20) + "..." + orgStr.substr(orgStr.length - 4, orgStr.length);
+      const subStr = orgStr.substr(0, 10) + "..." + orgStr.substr(orgStr.length - 4, orgStr.length);
       setaccountAddress(subStr);
       setFullAddress(orgStr);
       setAccountBalance(wallet.balance);
@@ -56,9 +56,9 @@ export default function AccountWithBalance() {
         </div>
       </div>
       <div className="account-balance">
-        <p className="text-right text-gray-500">Available Balance:</p>
+        <p className="text-right text-gray-500">Available Balance (BAND)</p>
         <h3 className="text-3xl font-bold text-right">
-          {accountBalance ? <div>{accountBalance}</div> : "0"} BAND
+          {accountBalance ? <div>{accountBalance}</div> : "0"}
         </h3>
       </div>
     </div>

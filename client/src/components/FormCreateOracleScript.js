@@ -29,7 +29,7 @@ export default function FormCreateOracleScript() {
   const [code, setCode] = useState([]);
   const [filename, setfilename] = useState("");
   const [codeEditor, setCodeEditor] = useState(`# Insert your code here`);
-  const [wasmCode, setwasmCode] = useState("");
+  const [wasmCode, setwasmCode] = useState(null);
 
   // Handling Functions
   const nextStep = (e) => {
@@ -151,24 +151,15 @@ export default function FormCreateOracleScript() {
     setStep(step + 1);
     if (codeType !== "upload") {
       await axios
-        .post(`https://play.rust-lang.org/compile`, {
-          assemblyFlavor: "att",
-          backtrace: false,
-          channel: "nightly",
+        .post(`/compile`, {
           code: codeEditor,
-          crateType: "bin",
-          demangleAssembly: "demangle",
-          edition: "2021",
-          mode: "debug",
-          processAssembly: "filter",
-          target: "wasm",
-          tests: false,
         })
         .then((res) => {
-          setwasmCode(res.data.code);
+          setwasmCode(res.data);
         });
     }
-    getPreviewTx();
+    // TODO: Check function create message
+    // getPreviewTx();
   };
 
   const getPreviewTx = async () => {
@@ -177,7 +168,7 @@ export default function FormCreateOracleScript() {
       osdesc,
       schema,
       sourcecodeUrl,
-      codeType === "upload" ? code : window.btoa(wasmCode),
+      codeType === "upload" ? code : wasmCode,
       owner,
       wallet.address, // sender
       wallet.privateKey,
@@ -435,7 +426,7 @@ export default function FormCreateOracleScript() {
                         onClick={(e) => compileCode()}
                         className="disabled:opacity-50 button block text-md text-white bg-black hover:bg-black border-2 border-black focus:outline-none focus:ring-black focus:ring-opacity-50  py-2 px-10 rounded-xl focus:outline-none"
                       >
-                        Next
+                        Compile
                       </button>
                     </div>
                   </div>

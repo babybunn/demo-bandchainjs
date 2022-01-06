@@ -37,13 +37,7 @@ function FormSendToken() {
   const sendBandToken = async () => {
     if (!receiverAddress && !tokenAmount) return;
     setLoading(Boolean(1));
-    const response = await sendIBC(
-      receiverAddress,
-      tokenAmount,
-      wallet.privateKey,
-      wallet.pubkey,
-      wallet.address
-    );
+    const response = await sendIBC(receiverAddress, tokenAmount, wallet);
     console.log(response);
     if (response.height === 0) {
       setSendResult(response.rawLog);

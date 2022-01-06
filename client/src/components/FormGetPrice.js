@@ -19,7 +19,7 @@ function FormGetPrice() {
   const [askCount, setaskCount] = useState(16);
 
   useEffect(() => {
-    getPrice(defaultPair);
+    // getPrice(defaultPair);
   }, []);
 
   async function getPrice(pair = []) {

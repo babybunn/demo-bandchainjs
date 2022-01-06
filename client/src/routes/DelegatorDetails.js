@@ -44,23 +44,23 @@ export default function DelegatorDetails() {
 
   async function getPrice() {
     const response = await getPairPrice(["BAND/USD"], 10, 16);
-    setUsdPrice(response[0].rate);
+    if (response) setUsdPrice(response[0].rate);
   }
 
-  const GET_DELEGATIONS = gql`
-    subscription GetAccountDelegations($address: String!) {
-      delegations_view(
-        where: { delegator_address: { _eq: $address } }
-        order_by: { moniker: asc }
-      ) {
-        amount
-        moniker
-        reward
-        operator_address
-        delegator_address
-      }
-    }
-  `;
+  // const GET_DELEGATIONS = gql`
+  //   subscription GetAccountDelegations($address: String!) {
+  //     delegations_view(
+  //       where: { delegator_address: { _eq: $address } }
+  //       order_by: { moniker: asc }
+  //     ) {
+  //       amount
+  //       moniker
+  //       reward
+  //       operator_address
+  //       delegator_address
+  //     }
+  //   }
+  // `;
 
   const GET_VALIDATOR_DETAILS = gql`
     query GetValidatorDetails($address: String!, $operator: String!) {

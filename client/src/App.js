@@ -35,18 +35,20 @@ const BackRoute = () => {
 
 function App() {
   const wallet = useSelector((state) => state.wallet);
-  const [data, setData] = useState(null);
+  const [code, setCode] = useState(null);
 
   useEffect(() => {
-    fetch("/api")
-      .then((res) => res.json())
-      .then((data) => setData(data.message));
+    // fetch("/compile")
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setCode(data.message);
+    //     if (code) console.log(code);
+    //   });
   }, []);
 
   return (
     <BrowserRouter>
       <div className="App md:p-6 p-3">
-        <p>{!data ? "Loading..." : data}</p>
         <Navbar />
         <Routes>
           <Route exact path="/" element={<Home />} />

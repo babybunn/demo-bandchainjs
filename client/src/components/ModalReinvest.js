@@ -18,12 +18,7 @@ export default function ModalReinvest({ operator, rewardAmount }) {
   const confirm = async () => {
     setmodalloading(true);
 
-    const response = await reinvestRewards(
-      operator,
-      wallet.privateKey,
-      wallet.pubkey,
-      wallet.address
-    );
+    const response = await reinvestRewards(operator, wallet);
     if (response) {
       settxhash(response.txhash);
     }

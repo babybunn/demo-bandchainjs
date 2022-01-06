@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { sendCoin } from "../band";
+import { Message, Coin } from "@bandprotocol/bandchain.js";
+import { getWallet, broadCastTx } from "../band";
 import Loading from "./Loading";
 import { useSelector } from "react-redux";
 import UnableService from "./UnableService";
@@ -13,7 +14,7 @@ function FormDelegate() {
   const [amount, setAmount] = useState("");
   const [sendResult, setSendResult] = useState("");
   const [sendResultSuccess, setSendResultSuccess] = useState("");
-  const [loading, setLoading] = useState(Boolean(0));
+  const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
@@ -34,21 +35,31 @@ function FormDelegate() {
 
   const sendBandToken = async () => {
     if (!validator && !amount) return;
-    setLoading(Boolean(1));
-    const response = await sendCoin(
-      validator,
-      amount,
-      wallet.privateKey,
-      wallet.pubkey,
-      wallet.address,
-      "delegate"
-    );
+    setLoading(true);
+    const response = await sendCoin();
+
     if (response.data === "") setSendResult(response.rawLog);
     if (response.data !== "") {
       setTransactions((transactions) => [...transactions, response.txhash]);
       setSendResultSuccess(response.txhash);
     }
-    setLoading(Boolean(0));
+    setLoading(false);
+  };
+
+  const sendCoin = async () => {
+    const { walletAddress } = getWallet(wallet.mnemonic);
+    const { MsgDelegate } = Message;
+
+    const sendAmount = new Coin();
+    sendAmount.setDenom("uband");
+    sendAmount.setAmount((amount * 1e6).toString());
+
+    const msg = new MsgDelegate(walletAddress, validator, sendAmount);
+
+    // Step 5 send the transaction
+    const response = await broadCastTx(msg, wallet.mnemonic);
+
+    return response;
   };
 
   return (
@@ -126,6 +137,8 @@ function FormDelegate() {
                   <a
                     className="text-black mb-3 p-3 border-2 border-gray-200 hover:border-blue rounded-xl block"
                     href={`https://laozi-testnet4.cosmoscan.io/tx/${tx}`}
+                    target="_blank"
+                    rel="noreferrer"
                   >
                     {tx}
                   </a>

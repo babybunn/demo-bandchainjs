@@ -8,13 +8,9 @@ export function SingleDelegator({ delegator }) {
   const rewards = delegator.reward / 1e6;
   const claim = async (e) => {
     e.preventDefault();
-    const response = await withdrawReward(
-      wallet.address,
-      validator,
-      wallet.address,
-      wallet.pubkey,
-      wallet.privateKey
-    );
+    const response = await withdrawReward(wallet.address, validator, wallet);
+
+    //TODO: there's no handle fn to the response in UI
     console.log(response);
   };
 

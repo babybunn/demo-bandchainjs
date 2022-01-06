@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Client, Wallet, Obi, Message, Coin, Transaction, Fee } from "@bandprotocol/bandchain.js";
+import { grpcUrl } from "../api";
+
+const client = new Client(grpcUrl);
 
 const initialState = {
   address: null,
-  name: "",
-  privateKey: null,
-  pubkey: null,
+  mnemonic: "",
   balance: 0,
 };
 
@@ -14,15 +16,11 @@ export const walletSlice = createSlice({
   reducers: {
     addWallet: (state, action) => {
       state.address = action.payload.address;
-      state.name = action.payload.name;
-      state.privateKey = action.payload.privateKey;
-      state.pubkey = action.payload.pubkey;
+      state.mnemonic = action.payload.mnemonic;
     },
     removeWallet: (state, action) => {
-      state.address = null;
-      state.name = "";
-      state.privateKey = null;
-      state.pubkey = null;
+      state.address = "";
+      state.mnemonic = "";
       state.balance = 0;
     },
     updateBalance: (state, action) => {

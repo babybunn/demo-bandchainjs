@@ -22,14 +22,7 @@ export default function ModalRedelegate({ title, operator }) {
     console.log(operator);
     console.log(destvalidator);
 
-    const response = await reDelegateCoin(
-      operator,
-      destvalidator,
-      amount,
-      wallet.privateKey,
-      wallet.pubkey,
-      wallet.address
-    );
+    const response = await reDelegateCoin(operator, destvalidator, amount, wallet);
     if (response) {
       settxhash(response.txhash);
     }
