@@ -1163,22 +1163,9 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bandprotocol/bandchain.js@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@bandprotocol/bandchain.js/-/bandchain.js-2.0.2.tgz#bf4fd9aba6c621d7566d1d5174e98b0dc64ed602"
-  integrity sha512-KNXIirkQaOXTnwnZvBI5j6VS3BkdUHDTROxOrRZ9AwkogqqXH9qAd/awzkPAfM198437EcZc7gtoZN7Mzazp8g==
-  dependencies:
-    "@improbable-eng/grpc-web" "^0.14.0"
-    "@improbable-eng/grpc-web-node-http-transport" "^0.14.0"
-    "@types/google-protobuf" "^3.15.2"
-    axios "^0.21.0"
-    bech32 "^1.1.4"
-    bip32 "^2.0.6"
-    bip39 "^3.0.2"
-    bitcoinjs-lib "^5.2.0"
-    crypto "^1.0.1"
-    google-protobuf "^3.17.3"
-    secp256k1 "^4.0.2"
+"@bandprotocol/bandchain.js@link:../../bandchain.js":
+  version "0.0.0"
+  uid ""
 
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
@@ -5811,9 +5798,9 @@ globby@^6.1.0:
     pinkie-promise "^2.0.0"
 
 google-protobuf@^3.17.3:
-  version "3.19.1"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.19.1.tgz#5af5390e8206c446d8f49febaffd4b7f4ac28f41"
-  integrity sha512-Isv1RlNC+IzZzilcxnlVSf+JvuhxmY7DaxYCBy+zPS9XVuJRtlTTIXR9hnZ1YL1MMusJn/7eSy2swCzZIomQSg==
+  version "3.19.2"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.19.2.tgz#b20043ca17d3bf108f686f82cade85185d658273"
+  integrity sha512-VVi7/U6WZ5aH11i7/z2kuGHENZXUSZ6VonAp20cnInF0mVaGk3T23eSTIgJ+OjUKEAB4+bHdszseQg29TL+wSg==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   version "4.2.6"

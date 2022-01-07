@@ -7,7 +7,7 @@ export default function OracleScript() {
           <ul className="services--list flex gap-6 flex-wrap items-stretch">
             <li className="services--list-item flex-grow w-1/5">
               <Link
-                to="createos"
+                to="create"
                 className="h-full flex items-center flex-col justify-center border-4 border-solid border-gray-200 block p-5 hover:border-blue rounded-2xl text-center"
               >
                 <img
@@ -21,7 +21,7 @@ export default function OracleScript() {
             </li>
             <li className="services--list-item flex-grow w-1/5">
               <Link
-                to="editos"
+                to="edit"
                 className="h-full flex items-center flex-col justify-center border-4 border-solid border-gray-200 block p-5 hover:border-blue rounded-2xl text-center"
               >
                 <img

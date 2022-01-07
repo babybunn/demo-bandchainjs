@@ -24,6 +24,7 @@ import DelegatorDetails from "./routes/DelegatorDetails";
 import CreateOracleScript from "./routes/CreateOracleScript";
 import EditOracleScript from "./routes/EditOracleScript";
 import Converter from "./routes/Converter";
+import Transactions from "./routes/Transactions";
 
 const BackRoute = () => {
   const location = useLocation();
@@ -59,8 +60,8 @@ function App() {
           <Route exact path="/transfer" element={<IBCTransfer />} />
           <Route exact path="/datasource" element={<DataSource />} />
           <Route exact path="/oraclescript" element={<OracleScript />} />
-          <Route exact path="/oraclescript/createos" element={<CreateOracleScript />} />
-          <Route exact path="/oraclescript/editos" element={<EditOracleScript />} />
+          <Route exact path="/oraclescript/create" element={<CreateOracleScript />} />
+          <Route exact path="/oraclescript/edit" element={<CreateOracleScript />} />
           <Route
             exact
             path="/myaccount"
@@ -71,6 +72,7 @@ function App() {
               <Route path=":operator" element={<DelegatorDetails />} />
             </Route>
             <Route path="converter" element={<Converter />} />
+            <Route path="transactions" element={<Transactions />} />
           </Route>
         </Routes>
         <BackRoute />

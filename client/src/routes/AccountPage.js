@@ -5,6 +5,7 @@ import Validators from "./Validators";
 import Delegations from "./Delegations";
 import DelegatorDetails from "./DelegatorDetails";
 import Converter from "./Converter";
+import Transactions from "./Transactions";
 
 export default function AccountPage() {
   return (
@@ -18,6 +19,7 @@ export default function AccountPage() {
               <Route path=":operator" element={<DelegatorDetails />} />
             </Route>
             <Route path="converter" element={<Converter />} />
+            <Route path="transactions" element={<Transactions />} />
           </Routes>
         </div>
       </div>

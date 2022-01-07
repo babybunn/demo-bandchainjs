@@ -5,7 +5,7 @@
   "proxy": "http://localhost:3001",
   "dependencies": {
     "@apollo/client": "^3.5.6",
-    "@bandprotocol/bandchain.js": "^2.0.2",
+    "@bandprotocol/bandchain.js": "link:../../bandchain.js",
     "@craco/craco": "^6.4.0",
     "@heroicons/react": "^1.0.5",
     "@reduxjs/toolkit": "^1.6.2",

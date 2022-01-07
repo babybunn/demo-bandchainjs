@@ -1,18 +1,17 @@
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { createOracleScript, getRawPreview } from "../band";
 import { useSelector } from "react-redux";
 import UnableService from "./UnableService";
-import AccountWithBalance from "./AccountWithBalance";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-rust";
-// import "prismjs/themes/prism.css";
 import "prismjs/themes/prism-tomorrow.css";
 import axios from "axios";
 
-export default function FormCreateOracleScript() {
+export default function FormOracleScript() {
   const wallet = useSelector((state) => state.wallet);
 
   // State
@@ -21,6 +20,7 @@ export default function FormCreateOracleScript() {
   const [codeType, setCodeType] = useState("upload");
 
   // Form Data
+  const [osID, setOsId] = useState("");
   const [osname, setosname] = useState("");
   const [osdesc, setosdesc] = useState("");
   const [schema, setschema] = useState("");
@@ -30,6 +30,9 @@ export default function FormCreateOracleScript() {
   const [filename, setfilename] = useState("");
   const [codeEditor, setCodeEditor] = useState(`# Insert your code here`);
   const [wasmCode, setwasmCode] = useState(null);
+  const [osActionType, setOsActionType] = useState("create");
+
+  const location = useLocation();
 
   // Handling Functions
   const nextStep = (e) => {
@@ -155,7 +158,8 @@ export default function FormCreateOracleScript() {
           code: codeEditor,
         })
         .then((res) => {
-          setwasmCode(res.data);
+          console.log(res);
+          setwasmCode(res.data.fileBuf);
         });
     }
     // TODO: Check function create message
@@ -168,7 +172,7 @@ export default function FormCreateOracleScript() {
       osdesc,
       schema,
       sourcecodeUrl,
-      codeType === "upload" ? code : wasmCode,
+      codeType === "upload" ? code : Buffer.from(wasmCode),
       owner,
       wallet
     );
@@ -178,12 +182,14 @@ export default function FormCreateOracleScript() {
 
   const submitCode = async () => {
     const response = await createOracleScript(
-      osname,
-      osdesc,
-      schema,
-      sourcecodeUrl,
-      codeType === "upload" ? code : wasmCode,
-      owner,
+      {
+        name: osname,
+        desc: osdesc,
+        schema: schema,
+        url: sourcecodeUrl,
+        code: codeType === "upload" ? code : Buffer.from(wasmCode),
+        owner: owner,
+      },
       wallet
     );
     console.log(response);
@@ -197,13 +203,16 @@ export default function FormCreateOracleScript() {
     } else {
       setisConnected(false);
     }
+    if (location.pathname.includes("/edit")) {
+      setOsActionType("edit");
+    }
   }, [wallet]);
 
   return (
     <div className="flex flex-row flex-wrap">
       <div className="w-full md:w-4/12 mb-8 md:mb-0">
         <h2 className="mb-5 text-3xl ">
-          <strong>Add a new Oracle Script</strong>
+          <strong>{osActionType === "edit" ? `Edit an ` : `Add a new `} Oracle Script</strong>
         </h2>
         <p className="mb-5">
           <a
@@ -211,9 +220,11 @@ export default function FormCreateOracleScript() {
             target="_blank"
             rel="noreferrer"
           >
-            <strong>MsgCreateOracleScript</strong>
+            <strong>
+              {osActionType === "edit" ? `MsgEditOracleScript` : `MsgCreateOracleScript`}{" "}
+            </strong>
           </a>{" "}
-          is a message for creating a new Oracle Script.
+          is a message for this service
         </p>
         <div className="process-step">
           <ul>
@@ -243,6 +254,23 @@ export default function FormCreateOracleScript() {
                       <h3 className="mb-4">
                         <strong>Step 1:</strong> Enter the oracle script information below.
                       </h3>
+                      {osActionType === "edit" ? (
+                        <div className="input-group mb-3">
+                          <label
+                            htmlFor="input-address"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
+                            Oracle Script ID <span className="text-orange">*</span>
+                          </label>
+                          <input
+                            className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
+                            type="text"
+                            id="input-address"
+                            onChange={(e) => setOsId(e.target.value)}
+                            value={osname}
+                          />
+                        </div>
+                      ) : null}
                       <div className="input-group mb-3">
                         <label
                           htmlFor="input-address"
@@ -422,7 +450,7 @@ export default function FormCreateOracleScript() {
                         onClick={(e) => compileCode()}
                         className="disabled:opacity-50 button block text-md text-white bg-black hover:bg-black border-2 border-black focus:outline-none focus:ring-black focus:ring-opacity-50  py-2 px-10 rounded-xl focus:outline-none"
                       >
-                        Compile
+                        Next
                       </button>
                     </div>
                   </div>

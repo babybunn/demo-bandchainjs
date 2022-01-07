@@ -107,32 +107,17 @@ export const editDataSource = async (id, code, owner, wallet, ...args) => {
   return response;
 };
 
-// TODO: Waiting for the function in bandchain.js being merged
-export async function createOracleScript(
-  title,
-  desc,
-  schema,
-  source_code_url,
-  code,
-  owner,
-  wallet
-) {
-  let coin = new Coin();
-  coin.setDenom("uband");
-  coin.setAmount("1000000");
-
-  let feeCoin = new Coin();
-  feeCoin.setDenom("uband");
-  feeCoin.setAmount("1000");
+export async function createOracleScript(postData, wallet) {
+  const { name, desc, schema, url, code, owner } = postData;
 
   const requestMessage = new Message.MsgCreateOracleScript(
-    title,
+    name,
+    code,
+    owner,
+    wallet.address,
     desc,
     schema,
-    source_code_url,
-    Buffer.from(code),
-    owner,
-    wallet.address
+    url
   );
 
   const response = await broadCastTx(requestMessage, wallet.mnemonic);
@@ -141,33 +126,17 @@ export async function createOracleScript(
 }
 
 // TODO: Waiting for the function in bandchain.js being merged
-export async function createMsgEditOS(
-  id,
-  title,
-  desc,
-  schema,
-  source_code_url,
-  code,
-  owner,
-  wallet
-) {
-  let coin = new Coin();
-  coin.setDenom("uband");
-  coin.setAmount("1000000");
-
-  let feeCoin = new Coin();
-  feeCoin.setDenom("uband");
-  feeCoin.setAmount("1000");
-
+export async function createMsgEditOS(postData, wallet) {
+  const { id, name, desc, schema, url, code, owner } = postData;
   const requestMessage = new Message.MsgEditOracleScript(
     id,
-    title,
+    code,
+    owner,
+    wallet.address,
+    name,
     desc,
     schema,
-    source_code_url,
-    Buffer.from(code),
-    owner,
-    wallet.address
+    url
   );
 
   const response = await broadCastTx(requestMessage, wallet.mnemonic);
