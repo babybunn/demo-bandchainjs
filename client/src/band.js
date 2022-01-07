@@ -89,10 +89,7 @@ export const createDataSource = async (title, code, owner, treasury, wallet, ...
 
   const msg = MsgCreateDataSource(title, code, [feeCoin], treasury, owner, wallet.address, desc);
 
-  const signedTx = await createSignedTransaction(msg, wallet.mnemonic);
-
-  // Step 5 send the transaction
-  const response = await client.sendTxBlockMode(signedTx);
+  const response = await broadCastTx(msg, wallet.mnemonic);
 
   return response;
 };
@@ -105,8 +102,7 @@ export const editDataSource = async (id, code, owner, wallet, ...args) => {
 
   const msg = new Message.MsgEditDataSource(parseInt(id), code, [feeCoin], owner, wallet.address);
 
-  const signedTx = await createSignedTransaction(msg, wallet.mnemonic);
-  const response = await client.sendTxBlockMode(signedTx);
+  const response = await broadCastTx(msg, wallet.mnemonic);
 
   return response;
 };
@@ -118,10 +114,8 @@ export async function createOracleScript(
   schema,
   source_code_url,
   code,
-  sender,
   owner,
-  privateKey,
-  pubkey
+  wallet
 ) {
   let coin = new Coin();
   coin.setDenom("uband");
@@ -138,13 +132,12 @@ export async function createOracleScript(
     source_code_url,
     Buffer.from(code),
     owner,
-    sender
+    wallet.address
   );
 
-  const signedTx = await createSignedTransaction(requestMessage, sender, pubkey, privateKey);
-  const sendTx = await client.sendTxBlockMode(signedTx);
+  const response = await broadCastTx(requestMessage, wallet.mnemonic);
 
-  return sendTx;
+  return response;
 }
 
 // TODO: Waiting for the function in bandchain.js being merged
@@ -155,10 +148,8 @@ export async function createMsgEditOS(
   schema,
   source_code_url,
   code,
-  sender,
   owner,
-  privateKey,
-  pubkey
+  wallet
 ) {
   let coin = new Coin();
   coin.setDenom("uband");
@@ -176,13 +167,12 @@ export async function createMsgEditOS(
     source_code_url,
     Buffer.from(code),
     owner,
-    sender
+    wallet.address
   );
 
-  const signedTx = await createSignedTransaction(requestMessage, sender, pubkey, privateKey);
-  const sendTx = await client.sendTxBlockMode(signedTx);
+  const response = await broadCastTx(requestMessage, wallet.mnemonic);
 
-  return sendTx;
+  return response;
 }
 
 export async function getRawPreview(
@@ -272,30 +262,6 @@ export async function getRawPreviewEditOs(
   txn.withChainId(chainId);
   txn.withFee(fee);
   txn.withMemo("");
-
-  const signDoc = txn.getSignDoc(pubkey);
-  const signature = privateKey.sign(signDoc);
-
-  const txRawBytes = txn.getTxData(signature, pubkey);
-
-  return txRawBytes;
-}
-
-export async function createSignedTransaction(msg, sender, pubkey, privateKey) {
-  let feeCoin = new Coin();
-  feeCoin.setDenom("uband");
-  feeCoin.setAmount("1000");
-
-  const fee = new Fee();
-  fee.setAmountList([feeCoin]);
-  fee.setGasLimit(1000000);
-  const chainId = await client.getChainId();
-  const txn = new Transaction();
-  txn.withMessages(msg);
-  await txn.withSender(client, sender);
-  txn.withChainId(chainId);
-  txn.withFee(fee);
-  txn.withMemo("From Bandchain.js Demo App");
 
   const signDoc = txn.getSignDoc(pubkey);
   const signature = privateKey.sign(signDoc);

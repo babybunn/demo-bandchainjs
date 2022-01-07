@@ -170,9 +170,7 @@ export default function FormCreateOracleScript() {
       sourcecodeUrl,
       codeType === "upload" ? code : wasmCode,
       owner,
-      wallet.address, // sender
-      wallet.privateKey,
-      wallet.pubkey
+      wallet
     );
     console.log(response);
     // Todo: receive the response and display as a preview
@@ -184,11 +182,9 @@ export default function FormCreateOracleScript() {
       osdesc,
       schema,
       sourcecodeUrl,
-      codeType === "upload" ? code : window.btoa(wasmCode),
+      codeType === "upload" ? code : wasmCode,
       owner,
-      wallet.address, // sender
-      wallet.privateKey,
-      wallet.pubkey
+      wallet
     );
     console.log(response);
     // Todo: Show loading state and the result of the tx and show the next step
