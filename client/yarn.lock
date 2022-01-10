@@ -1163,9 +1163,22 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bandprotocol/bandchain.js@link:../../bandchain.js":
-  version "0.0.0"
-  uid ""
+"@bandprotocol/bandchain.js@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@bandprotocol/bandchain.js/-/bandchain.js-2.0.3.tgz#572732de1f96bae6efd968deddeef923664a4a6b"
+  integrity sha512-3IP5B7rFZdmYqHbMaRRxsT5uE/NsXjVaWqu1s/1LI2cY8ModHHfqJ107H6mIcIXOs6IHhYroGRbci5s8nbymIg==
+  dependencies:
+    "@improbable-eng/grpc-web" "^0.14.0"
+    "@improbable-eng/grpc-web-node-http-transport" "^0.14.0"
+    "@types/google-protobuf" "^3.15.2"
+    axios "^0.21.0"
+    bech32 "^1.1.4"
+    bip32 "^2.0.6"
+    bip39 "^3.0.2"
+    bitcoinjs-lib "^5.2.0"
+    crypto "^1.0.1"
+    google-protobuf "^3.17.3"
+    secp256k1 "^4.0.2"
 
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
