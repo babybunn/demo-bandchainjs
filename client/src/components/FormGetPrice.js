@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Client } from "@bandprotocol/bandchain.js";
 import CardPrice from "./CardPrice";
+import { grpcUrl } from "../api";
 
 function FormGetPrice() {
   const defaultPair = [
@@ -19,11 +20,10 @@ function FormGetPrice() {
   const [askCount, setaskCount] = useState(16);
 
   useEffect(() => {
-    // getPrice(defaultPair);
+    getPrice(defaultPair);
   }, []);
 
   async function getPrice(pair = []) {
-    const grpcUrl = "https://laozi-testnet4.bandchain.org/grpc-web";
     const client = new Client(grpcUrl);
     const rate = await client.getReferenceData(
       pairInput !== ""
