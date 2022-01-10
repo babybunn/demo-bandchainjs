@@ -7,11 +7,16 @@ const client = new Client(grpcUrl);
 export async function getPairPrice(pair, minCount, askCount) {
   try {
     const data = await client.getReferenceData(pair, minCount, askCount);
-    console.log(data);
     return data;
   } catch (error) {
     console.error(error);
   }
+}
+
+export function createWallet() {
+  const { PrivateKey } = Wallet;
+  const [mnemonic, priv] = PrivateKey.generate("m/44'/494'/0'/0/3");
+  return mnemonic;
 }
 
 export function getWallet(mnemonic) {

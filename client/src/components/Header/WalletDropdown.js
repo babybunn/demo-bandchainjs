@@ -16,6 +16,10 @@ export default function WalletDropdown() {
       setaccount(subStr);
     }
   }, [wallet]);
+
+  const handleDisconnectBtn = () => {
+    dispatch(removeWallet({}));
+  };
   return (
     <div className="relative inline-block">
       <div>
@@ -58,7 +62,7 @@ export default function WalletDropdown() {
             My Account
           </Link>
           <button
-            onClick={(e) => dispatch(removeWallet({}))}
+            onClick={handleDisconnectBtn}
             type="submit"
             className="text-orange block w-full text-left px-4 py-2 font-bold hover:bg-warmGray-100"
             role="menuitem"

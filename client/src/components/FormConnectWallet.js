@@ -10,14 +10,6 @@ export default function FormConnectWallet() {
   const dispatch = useDispatch();
   const [mnemonic, setMnemonic] = useState("");
 
-  // const GET_BALANCE = gql`
-  //   query GetBalance($address: String!) {
-  //     accounts(where: { address: { _eq: $address } }) {
-  //       balance
-  //     }
-  //   }
-  // `;
-
   const GET_BALANCE = gql`
     subscription GetBalance($address: String!) {
       accounts(where: { address: { _eq: $address } }) {
@@ -25,14 +17,11 @@ export default function FormConnectWallet() {
       }
     }
   `;
-
-  // const [getBalance, { loading, error, data }] = useLazyQuery(GET_BALANCE);
   const { loading, error, data } = useSubscription(GET_BALANCE, {
     variables: { address: wallet.address },
   });
 
   useEffect(() => {
-    // getBalance({ variables: { address: wallet.address } });
     if (data && data.accounts[0]) {
       const uband = data.accounts[0].balance.split("uband")[0];
       dispatch(
@@ -40,6 +29,7 @@ export default function FormConnectWallet() {
           balance: uband / 1e6,
         })
       );
+      setMnemonic("");
     }
     if (loading) console.error(loading);
     if (error) console.error(error);
@@ -72,14 +62,14 @@ export default function FormConnectWallet() {
               className="focus:outline-none focus:ring-2 focus:ring-gray-200 block w-full p-2 sm:text-sm border-solid border-2 border-gray-200 rounded-xl"
               type="text"
               id="input-address"
-              valur={mnemonic}
+              value={mnemonic}
               onChange={(e) => setMnemonic(e.target.value)}
             />
           </div>
         </div>
         <button
           onClick={(e) => handleConnectButton(e)}
-          className="button block w-full bg-purple-600 text-white py-2 px-4 rounded-xl hover:bg-purple-700 focus:outline-none focus:ring-purple-600 focus:ring-opacity-50 transition duration-500 ease-in-out"
+          className="button block w-full bg-black text-white py-2 px-4 rounded-xl hover:bg-black focus:outline-none focus:ring-purple-600 focus:ring-opacity-50 transition duration-500 ease-in-out"
         >
           Connect Wallet
         </button>
