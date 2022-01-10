@@ -22,7 +22,6 @@ import Validators from "./routes/Validators";
 import Delegations from "./routes/Delegations";
 import DelegatorDetails from "./routes/DelegatorDetails";
 import CreateOracleScript from "./routes/CreateOracleScript";
-import EditOracleScript from "./routes/EditOracleScript";
 import Converter from "./routes/Converter";
 import Transactions from "./routes/Transactions";
 

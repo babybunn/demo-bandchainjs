@@ -114,6 +114,7 @@ export const editDataSource = async (id, code, owner, wallet, ...args) => {
 
 export async function createOracleScript(postData, wallet) {
   const { name, desc, schema, url, code, owner } = postData;
+  console.log(name);
 
   const requestMessage = new Message.MsgCreateOracleScript(
     name,
@@ -131,7 +132,7 @@ export async function createOracleScript(postData, wallet) {
 }
 
 // TODO: Waiting for the function in bandchain.js being merged
-export async function createMsgEditOS(postData, wallet) {
+export async function editOracleScript(postData, wallet) {
   const { id, name, desc, schema, url, code, owner } = postData;
   const requestMessage = new Message.MsgEditOracleScript(
     id,
@@ -221,7 +222,7 @@ export async function getRawPreviewEditOs(
     desc,
     schema,
     source_code_url,
-    Buffer.from(code),
+    code,
     owner,
     sender
   );

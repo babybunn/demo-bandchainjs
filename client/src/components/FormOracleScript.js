@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { createOracleScript, getRawPreview } from "../band";
+import { createOracleScript, editOracleScript } from "../band";
 import { useSelector } from "react-redux";
 import UnableService from "./UnableService";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-rust";
+import "prismjs/components/prism-json";
 import "prismjs/themes/prism-tomorrow.css";
 import axios from "axios";
+import Loading from "./Loading";
 
 export default function FormOracleScript() {
   const wallet = useSelector((state) => state.wallet);
@@ -18,6 +20,9 @@ export default function FormOracleScript() {
   const [isConnected, setisConnected] = useState(false);
   const [step, setStep] = useState(1);
   const [codeType, setCodeType] = useState("upload");
+  const [previewJson, setPreviewJson] = useState("");
+  const [txhash, settxhash] = useState("");
+  const [isbroadcasting, setisbroadcasting] = useState(false);
 
   // Form Data
   const [osID, setOsId] = useState("");
@@ -57,25 +62,26 @@ export default function FormOracleScript() {
   };
 
   const onDrop = useCallback((acceptedFiles) => {
-    setfilename(acceptedFiles[0].name);
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
+    if (acceptedFiles.length > 0) {
+      setfilename(acceptedFiles[0].name);
+      acceptedFiles.forEach((file) => {
+        const reader = new FileReader();
 
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
-      reader.onload = () => {
-        // Do whatever you want with the file contents
-        const binaryStr = reader.result;
-        console.log(binaryStr);
-        setCode(binaryStr);
-      };
-      reader.readAsArrayBuffer(file);
-    });
+        reader.onabort = () => console.log("file reading was aborted");
+        reader.onerror = () => console.log("file reading has failed");
+        reader.onload = () => {
+          // Do whatever you want with the file contents
+          const binaryStr = reader.result;
+          setCode(binaryStr);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "text/x-rustsrc",
+    // accept: "text/x-wasm",
   });
 
   const renderSwitchCode = () => {
@@ -158,41 +164,56 @@ export default function FormOracleScript() {
           code: codeEditor,
         })
         .then((res) => {
-          console.log(res);
           setwasmCode(res.data.fileBuf);
         });
     }
-    // TODO: Check function create message
-    // getPreviewTx();
-  };
-
-  const getPreviewTx = async () => {
-    const response = await getRawPreview(
-      osname,
-      osdesc,
-      schema,
-      sourcecodeUrl,
-      codeType === "upload" ? code : Buffer.from(wasmCode),
-      owner,
-      wallet
+    setPreviewJson(
+      JSON.stringify({
+        name: osname,
+        description: osdesc,
+        schema: schema,
+        source_code_url: sourcecodeUrl,
+        owner: owner,
+        sender: wallet.address,
+      })
     );
-    console.log(response);
-    // Todo: receive the response and display as a preview
   };
 
   const submitCode = async () => {
-    const response = await createOracleScript(
-      {
-        name: osname,
-        desc: osdesc,
-        schema: schema,
-        url: sourcecodeUrl,
-        code: codeType === "upload" ? code : Buffer.from(wasmCode),
-        owner: owner,
-      },
-      wallet
-    );
-    console.log(response);
+    setisbroadcasting(true);
+    setStep(step + 1);
+    const response =
+      osActionType === "create"
+        ? await createOracleScript(
+            {
+              name: osname,
+              desc: osdesc,
+              schema: schema,
+              url: sourcecodeUrl,
+              code: codeType === "upload" ? Buffer.from(code) : Buffer.from(wasmCode),
+              owner: owner,
+            },
+            wallet
+          )
+        : await editOracleScript(
+            {
+              id: osID,
+              name: osname,
+              desc: osdesc,
+              schema: schema,
+              url: sourcecodeUrl,
+              code: codeType === "upload" ? Buffer.from(code) : Buffer.from(wasmCode),
+              owner: owner,
+            },
+            wallet
+          );
+    if (response.code === 0) {
+      settxhash(response.txhash);
+      setisbroadcasting(false);
+    } else {
+      setisbroadcasting(false);
+      console.log(response);
+    }
     // Todo: Show loading state and the result of the tx and show the next step
   };
 
@@ -267,7 +288,7 @@ export default function FormOracleScript() {
                             type="text"
                             id="input-address"
                             onChange={(e) => setOsId(e.target.value)}
-                            value={osname}
+                            value={osID}
                           />
                         </div>
                       ) : null}
@@ -460,6 +481,20 @@ export default function FormOracleScript() {
                       <h3 className="mb-4">
                         <strong>Step 3:</strong> Review
                       </h3>
+                      <Editor
+                        value={previewJson}
+                        onValueChange={(rawcode) => setPreviewJson(rawcode)}
+                        highlight={(rawcode) => highlight(rawcode, languages.json)}
+                        padding={15}
+                        style={{
+                          fontFamily: '"Fira code", "Fira Mono", monospace',
+                          fontSize: 12,
+                          background: "#282A2B",
+                          color: "white",
+                          borderRadius: "10px",
+                          minHeight: "300px",
+                        }}
+                      />
                     </div>
                     <div className="form-buttons flex justify-between">
                       <button
@@ -476,6 +511,48 @@ export default function FormOracleScript() {
                       </button>
                     </div>
                   </div>
+                ) : step === 5 ? (
+                  isbroadcasting ? (
+                    <div className="p-6 form-wrapper flex items-center justify-center">
+                      <Loading />
+                    </div>
+                  ) : (
+                    <div className="p-6 form-wrapper flex items-center justify-center">
+                      <div className="form-container">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-20 w-20 text-green-400 mx-auto mb-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <h4 className="text-md text-center">
+                          <strong>Transaction Hash</strong>
+                        </h4>
+                        <a
+                          className="overflow-ellipsis overflow-hidden text-black mb-3 block hover:text-blue text-center"
+                          href={`https://laozi-testnet4.cosmoscan.io/tx/${txhash}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {txhash}
+                        </a>
+                        <button
+                          onClick={(e) => setStep(1)}
+                          className="button block mx-auto text-sm text-black hover:text-white bg-white hover:bg-black border-2 border-black focus:outline-none focus:ring-black focus:ring-opacity-50  py-2 px-10 rounded-xl focus:outline-none"
+                        >
+                          Back
+                        </button>
+                      </div>
+                    </div>
+                  )
                 ) : (
                   ""
                 )}
