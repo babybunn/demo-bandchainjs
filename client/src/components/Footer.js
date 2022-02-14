@@ -5,7 +5,7 @@ export default function Footer() {
       <p className="mb-0 text-sm text-gray-400">
         Designed and Developed by{" "}
         <a
-          href="https://github.com/pangthebabydustbunny"
+          href="https://github.com/babybunn"
           target="_blank"
           rel="noreferrer"
           className="text-blue"
