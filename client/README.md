@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Demo App
 
-[https://demo-bandchainjs.herokuapp.com/](https://demo-bandchainjs.herokuapp.com/)
+[https://demo-bandchainjs-v2.herokuapp.com/](https://demo-bandchainjs-v2.herokuapp.com/)
 
 ## Available Scripts
 
