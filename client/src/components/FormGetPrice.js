@@ -4,15 +4,7 @@ import CardPrice from './CardPrice'
 import { grpcUrl } from '../api'
 
 function FormGetPrice() {
-  const defaultPair = [
-    'BTC/USD',
-    'ETH/USD',
-    'BNB/USD',
-    'LUNA/USD',
-    'DOT/USD',
-    'BAND/USD',
-    'ALPHA/USD',
-  ]
+  const defaultPair = ['BTC/USD', 'ETH/USD', 'BNB/USD', 'DOT/USD', 'BAND/USD', 'ALPHA/USD']
   // states
   const [prices, setPrice] = useState([])
   const [pairInput, setPairInput] = useState('')
