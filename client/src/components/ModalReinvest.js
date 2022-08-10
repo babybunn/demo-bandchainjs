@@ -1,28 +1,28 @@
-import { useState, useContext } from "react";
-import { reinvestRewards } from "../band";
-import { useSelector } from "react-redux";
-import { ModalDelegateContext } from "../app-context";
-import { gql, useQuery } from "@apollo/client";
+import { useState, useContext } from 'react'
+import { reinvestRewards } from '../band'
+import { useSelector } from 'react-redux'
+import { ModalDelegateContext } from '../app-context'
+import { gql, useQuery } from '@apollo/client'
 
 export default function ModalReinvest({ operator, rewardAmount }) {
-  const { isShowModalReinvest, setIsShowModalReInvest } = useContext(ModalDelegateContext);
-  const wallet = useSelector((state) => state.wallet);
-  const [modalloading, setmodalloading] = useState(false);
-  const [txhash, settxhash] = useState("");
+  const { isShowModalReinvest, setIsShowModalReInvest } = useContext(ModalDelegateContext)
+  const wallet = useSelector((state) => state.wallet)
+  const [modalloading, setmodalloading] = useState(false)
+  const [txhash, settxhash] = useState('')
 
   const closeModalHandler = () => {
-    setmodalloading(false);
-    setIsShowModalReInvest(false);
-  };
+    setmodalloading(false)
+    setIsShowModalReInvest(false)
+  }
 
   const confirm = async () => {
-    setmodalloading(true);
+    setmodalloading(true)
 
-    const response = await reinvestRewards(operator, wallet);
+    const response = await reinvestRewards(operator, wallet)
     if (response) {
-      settxhash(response.txhash);
+      settxhash(response.txhash)
     }
-  };
+  }
 
   return (
     <div
@@ -31,8 +31,8 @@ export default function ModalReinvest({ operator, rewardAmount }) {
       aria-modal="true"
       className={
         isShowModalReinvest
-          ? "fixed z-10 inset-0 overflow-y-auto block"
-          : " fixed z-10 inset-0 overflow-y-auto hidden"
+          ? 'fixed z-10 inset-0 overflow-y-auto block'
+          : ' fixed z-10 inset-0 overflow-y-auto hidden'
       }
     >
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -89,7 +89,7 @@ export default function ModalReinvest({ operator, rewardAmount }) {
                   </h4>
                   <a
                     className="overflow-ellipsis overflow-hidden text-black mb-3 block hover:text-blue"
-                    href={`https://laozi-testnet4.cosmoscan.io/tx/${txhash}`}
+                    href={`https://laozi-testnet5.cosmoscan.io/tx/${txhash}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -135,5 +135,5 @@ export default function ModalReinvest({ operator, rewardAmount }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

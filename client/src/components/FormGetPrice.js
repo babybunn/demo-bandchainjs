@@ -1,41 +1,41 @@
-import { useEffect, useState } from "react";
-import { Client } from "@bandprotocol/bandchain.js";
-import CardPrice from "./CardPrice";
-import { grpcUrl } from "../api";
+import { useEffect, useState } from 'react'
+import { Client } from '@bandprotocol/bandchain.js'
+import CardPrice from './CardPrice'
+import { grpcUrl } from '../api'
 
 function FormGetPrice() {
   const defaultPair = [
-    "BTC/USD",
-    "ETH/USD",
-    "BNB/USD",
-    "LUNA/USD",
-    "DOT/USD",
-    "BAND/USD",
-    "ALPHA/USD",
-  ];
+    'BTC/USD',
+    'ETH/USD',
+    'BNB/USD',
+    'LUNA/USD',
+    'DOT/USD',
+    'BAND/USD',
+    'ALPHA/USD',
+  ]
   // states
-  const [prices, setPrice] = useState([]);
-  const [pairInput, setPairInput] = useState("");
-  const [minCount, setminCount] = useState(10);
-  const [askCount, setaskCount] = useState(16);
+  const [prices, setPrice] = useState([])
+  const [pairInput, setPairInput] = useState('')
+  const [minCount, setminCount] = useState(10)
+  const [askCount, setaskCount] = useState(16)
 
   useEffect(() => {
-    getPrice(defaultPair);
-  }, []);
+    getPrice(defaultPair)
+  }, [])
 
   async function getPrice(pair = []) {
-    const client = new Client(grpcUrl);
+    const client = new Client(grpcUrl)
     const rate = await client.getReferenceData(
-      pairInput !== ""
-        ? pairInput.toUpperCase().replace(/\s/g, "").split(",")
+      pairInput !== ''
+        ? pairInput.toUpperCase().replace(/\s/g, '').split(',')
         : pair.length > 0
         ? pair
         : defaultPair,
       minCount,
       askCount
-    );
+    )
     // console.log(rate)
-    setPrice(rate);
+    setPrice(rate)
   }
 
   return (
@@ -45,14 +45,14 @@ function FormGetPrice() {
           <strong>Get Price</strong>
         </h2>
         <p className="mb-5">
-          This section shows an example on how to query data from BandChain using{" "}
+          This section shows an example on how to query data from BandChain using{' '}
           <a
             href="https://docs.bandchain.org/client-library/bandchain.js/get-started.html#get-reference-data"
             target="_blank"
             rel="noreferrer"
           >
             <strong>getReferenceData</strong>
-          </a>{" "}
+          </a>{' '}
           method. This example query standard price references based on given symbol pairs, min
           count, and ask count.
         </p>
@@ -126,7 +126,7 @@ function FormGetPrice() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default FormGetPrice;
+export default FormGetPrice

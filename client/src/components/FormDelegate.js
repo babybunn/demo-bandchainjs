@@ -1,66 +1,66 @@
-import { useState, useEffect } from "react";
-import { Message, Coin } from "@bandprotocol/bandchain.js";
-import { getWallet, broadCastTx } from "../band";
-import Loading from "./Loading";
-import { useSelector } from "react-redux";
-import UnableService from "./UnableService";
-import AccountWithBalance from "./AccountWithBalance";
+import { useState, useEffect } from 'react'
+import { Message, Coin } from '@bandprotocol/bandchain.js'
+import { getWallet, broadCastTx } from '../band'
+import Loading from './Loading'
+import { useSelector } from 'react-redux'
+import UnableService from './UnableService'
+import AccountWithBalance from './AccountWithBalance'
 
 function FormDelegate() {
-  const wallet = useSelector((state) => state.wallet);
+  const wallet = useSelector((state) => state.wallet)
 
-  const [validator, setValidator] = useState("bandvaloper1zkf9qzs7ayf3uqksxqwve8q693dsdhxk800wvw");
-  const [isConnected, setisConnected] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [sendResult, setSendResult] = useState("");
-  const [sendResultSuccess, setSendResultSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [transactions, setTransactions] = useState([]);
+  const [validator, setValidator] = useState('bandvaloper1zkf9qzs7ayf3uqksxqwve8q693dsdhxk800wvw')
+  const [isConnected, setisConnected] = useState(false)
+  const [amount, setAmount] = useState('')
+  const [sendResult, setSendResult] = useState('')
+  const [sendResultSuccess, setSendResultSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
     if (wallet.address) {
-      setisConnected(true);
+      setisConnected(true)
     } else {
-      setisConnected(false);
+      setisConnected(false)
     }
-  }, [wallet]);
+  }, [wallet])
 
   const handleInputValidator = (e) => {
-    if (e.target.value) setValidator(e.target.value);
-  };
+    if (e.target.value) setValidator(e.target.value)
+  }
 
   const handleInputAmount = (e) => {
-    if (e.target.value) setAmount(e.target.value);
-  };
+    if (e.target.value) setAmount(e.target.value)
+  }
 
   const sendBandToken = async () => {
-    if (!validator && !amount) return;
-    setLoading(true);
-    const response = await sendCoin();
+    if (!validator && !amount) return
+    setLoading(true)
+    const response = await sendCoin()
 
-    if (response.data === "") setSendResult(response.rawLog);
-    if (response.data !== "") {
-      setTransactions((transactions) => [...transactions, response.txhash]);
-      setSendResultSuccess(response.txhash);
+    if (response.data === '') setSendResult(response.rawLog)
+    if (response.data !== '') {
+      setTransactions((transactions) => [...transactions, response.txhash])
+      setSendResultSuccess(response.txhash)
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const sendCoin = async () => {
-    const { walletAddress } = getWallet(wallet.mnemonic);
-    const { MsgDelegate } = Message;
+    const { walletAddress } = getWallet(wallet.mnemonic)
+    const { MsgDelegate } = Message
 
-    const sendAmount = new Coin();
-    sendAmount.setDenom("uband");
-    sendAmount.setAmount((amount * 1e6).toString());
+    const sendAmount = new Coin()
+    sendAmount.setDenom('uband')
+    sendAmount.setAmount((amount * 1e6).toString())
 
-    const msg = new MsgDelegate(walletAddress, validator, sendAmount);
+    const msg = new MsgDelegate(walletAddress, validator, sendAmount)
 
     // Step 5 send the transaction
-    const response = await broadCastTx(msg, wallet.mnemonic);
+    const response = await broadCastTx(msg, wallet.mnemonic)
 
-    return response;
-  };
+    return response
+  }
 
   return (
     <div className="flex flex-row flex-wrap">
@@ -136,13 +136,13 @@ function FormDelegate() {
                 return (
                   <a
                     className="text-black mb-3 p-3 border-2 border-gray-200 hover:border-blue rounded-xl block"
-                    href={`https://laozi-testnet4.cosmoscan.io/tx/${tx}`}
+                    href={`https://laozi-testnet5.cosmoscan.io/tx/${tx}`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {tx}
                   </a>
-                );
+                )
               })
             ) : (
               <div className="text-md">You don't have any transactions</div>
@@ -151,7 +151,7 @@ function FormDelegate() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default FormDelegate;
+export default FormDelegate

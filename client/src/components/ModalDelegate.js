@@ -1,54 +1,54 @@
-import { useState, useContext } from "react";
-import { Message, Coin } from "@bandprotocol/bandchain.js";
-import { undelegateCoin, broadCastTx } from "../band";
-import { useSelector } from "react-redux";
-import { ModalDelegateContext } from "../app-context";
+import { useState, useContext } from 'react'
+import { Message, Coin } from '@bandprotocol/bandchain.js'
+import { undelegateCoin, broadCastTx } from '../band'
+import { useSelector } from 'react-redux'
+import { ModalDelegateContext } from '../app-context'
 
 export default function ModalDelegate({ title, operator }) {
-  const { isShowModal, setIsShowModal } = useContext(ModalDelegateContext);
-  const wallet = useSelector((state) => state.wallet);
-  const [loading, setloading] = useState(false);
-  const [txhash, settxhash] = useState("");
-  const [amount, setAmount] = useState(0);
+  const { isShowModal, setIsShowModal } = useContext(ModalDelegateContext)
+  const wallet = useSelector((state) => state.wallet)
+  const [loading, setloading] = useState(false)
+  const [txhash, settxhash] = useState('')
+  const [amount, setAmount] = useState(0)
 
   const closeModalHandler = () => {
-    setloading(false);
-    setIsShowModal(false);
-  };
+    setloading(false)
+    setIsShowModal(false)
+  }
 
   const confirm = async () => {
-    setloading(true);
+    setloading(true)
 
     const response =
-      title === "delegate"
+      title === 'delegate'
         ? await sendCoin(
             operator,
             amount,
             wallet.privateKey,
             wallet.pubkey,
             wallet.address,
-            "delegate"
+            'delegate'
           )
-        : await undelegateCoin(operator, amount, wallet);
+        : await undelegateCoin(operator, amount, wallet)
     if (response) {
-      settxhash(response.txhash);
+      settxhash(response.txhash)
     }
-  };
+  }
 
   const sendCoin = async () => {
-    const { MsgDelegate } = Message;
+    const { MsgDelegate } = Message
 
-    const sendAmount = new Coin();
-    sendAmount.setDenom("uband");
-    sendAmount.setAmount((amount * 1e6).toString());
+    const sendAmount = new Coin()
+    sendAmount.setDenom('uband')
+    sendAmount.setAmount((amount * 1e6).toString())
 
-    const msg = new MsgDelegate(wallet.address, operator, sendAmount);
+    const msg = new MsgDelegate(wallet.address, operator, sendAmount)
 
     // Step 5 send the transaction
-    const response = await broadCastTx(msg, wallet.mnemonic);
+    const response = await broadCastTx(msg, wallet.mnemonic)
 
-    return response;
-  };
+    return response
+  }
 
   return (
     <div
@@ -57,8 +57,8 @@ export default function ModalDelegate({ title, operator }) {
       aria-modal="true"
       className={
         isShowModal
-          ? "fixed z-10 inset-0 overflow-y-auto block"
-          : " fixed z-10 inset-0 overflow-y-auto hidden"
+          ? 'fixed z-10 inset-0 overflow-y-auto block'
+          : ' fixed z-10 inset-0 overflow-y-auto hidden'
       }
     >
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -115,7 +115,7 @@ export default function ModalDelegate({ title, operator }) {
                   </h4>
                   <a
                     className="overflow-ellipsis overflow-hidden text-black mb-3 block hover:text-blue"
-                    href={`https://laozi-testnet4.cosmoscan.io/tx/${txhash}`}
+                    href={`https://laozi-testnet5.cosmoscan.io/tx/${txhash}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -135,7 +135,7 @@ export default function ModalDelegate({ title, operator }) {
                       htmlFor="input-address"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Delegate {title === "delegate" ? `To` : `From`}
+                      Delegate {title === 'delegate' ? `To` : `From`}
                     </label>
                     <p>{operator}</p>
                   </div>
@@ -167,5 +167,5 @@ export default function ModalDelegate({ title, operator }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

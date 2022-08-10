@@ -1,64 +1,64 @@
-import { broadCastTx } from "../band";
-import { Obi, Message, Coin } from "@bandprotocol/bandchain.js";
-import { useState, useEffect } from "react";
-import Loading from "./Loading";
-import { useSelector } from "react-redux";
-import UnableService from "./UnableService";
-import AccountWithBalance from "./AccountWithBalance";
+import { broadCastTx } from '../band'
+import { Obi, Message, Coin } from '@bandprotocol/bandchain.js'
+import { useState, useEffect } from 'react'
+import Loading from './Loading'
+import { useSelector } from 'react-redux'
+import UnableService from './UnableService'
+import AccountWithBalance from './AccountWithBalance'
 
 function FormSendRequest() {
-  const wallet = useSelector((state) => state.wallet);
-  const [isConnected, setisConnected] = useState(false);
+  const wallet = useSelector((state) => state.wallet)
+  const [isConnected, setisConnected] = useState(false)
 
-  const [sendResultError, setSendResultError] = useState("");
+  const [sendResultError, setSendResultError] = useState('')
   // const [sendResult, setSendResult] = useState([]);
-  const [symbols, setSymbols] = useState("");
-  const [multiplierInput, setMultiplierInput] = useState("");
-  const [feeInput, setFeeInput] = useState("");
-  const [prepareGasInput, setPrepareGasInput] = useState("");
-  const [executeGasInput, setExecuteGasInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [formStep, setFormStep] = useState(0);
+  const [symbols, setSymbols] = useState('')
+  const [multiplierInput, setMultiplierInput] = useState('')
+  const [feeInput, setFeeInput] = useState('')
+  const [prepareGasInput, setPrepareGasInput] = useState('')
+  const [executeGasInput, setExecuteGasInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [formStep, setFormStep] = useState(0)
 
-  const [transactions, setTransactions] = useState("");
+  const [transactions, setTransactions] = useState('')
 
   useEffect(() => {
     if (wallet.address) {
-      setisConnected(true);
+      setisConnected(true)
     } else {
-      setisConnected(false);
+      setisConnected(false)
     }
-  }, [wallet]);
+  }, [wallet])
 
   const sendRequest = async () => {
-    setFormStep(formStep + 1);
-    if (!symbols && !multiplierInput && !feeInput && !prepareGasInput && !executeGasInput) return;
-    setLoading(Boolean(1));
-    const requestID = await makeRequest();
+    setFormStep(formStep + 1)
+    if (!symbols && !multiplierInput && !feeInput && !prepareGasInput && !executeGasInput) return
+    setLoading(Boolean(1))
+    const requestID = await makeRequest()
 
-    if (requestID.data === "") {
-      setSendResultError(requestID.rawLog);
+    if (requestID.data === '') {
+      setSendResultError(requestID.rawLog)
     }
 
-    setTransactions(requestID.txhash);
-    setLoading(false);
-  };
+    setTransactions(requestID.txhash)
+    setLoading(false)
+  }
 
   const makeRequest = async () => {
-    const obi = new Obi("{symbols:[string],multiplier:u64}/{rates:[u64]}");
+    const obi = new Obi('{symbols:[string],multiplier:u64}/{rates:[u64]}')
     const calldata = obi.encodeInput({
-      symbols: symbols.toUpperCase().replace(/\s/g, "").split(","),
+      symbols: symbols.toUpperCase().replace(/\s/g, '').split(','),
       multiplier: multiplierInput,
-    });
+    })
 
-    const oracleScriptId = 37;
-    const askCount = 2;
-    const minCount = 1;
-    const clientId = "from_bandchain.js";
+    const oracleScriptId = 37
+    const askCount = 2
+    const minCount = 1
+    const clientId = 'from_bandchain.js'
 
-    let feeLimit = new Coin();
-    feeLimit.setDenom("uband");
-    feeLimit.setAmount(feeInput);
+    let feeLimit = new Coin()
+    feeLimit.setDenom('uband')
+    feeLimit.setAmount(feeInput)
 
     // Step 2.2: Create an oracle request message
     const requestMessage = new Message.MsgRequestData(
@@ -71,11 +71,11 @@ function FormSendRequest() {
       [feeLimit],
       prepareGasInput,
       executeGasInput
-    );
+    )
 
-    const tx = await broadCastTx(requestMessage, wallet.mnemonic);
-    return tx;
-  };
+    const tx = await broadCastTx(requestMessage, wallet.mnemonic)
+    return tx
+  }
 
   return (
     <div className="flex flex-row flex-wrap">
@@ -90,7 +90,7 @@ function FormSendRequest() {
             rel="noreferrer"
           >
             <strong>MsgRequestData</strong>
-          </a>{" "}
+          </a>{' '}
           is a message for sending a data oracle request.
         </p>
       </div>
@@ -200,7 +200,7 @@ function FormSendRequest() {
                     <Loading />
                   </div>
                 </div>
-              ) : transactions !== "" ? (
+              ) : transactions !== '' ? (
                 sendResultError ? (
                   <div className="form-wrapper flex items-center justify-center">
                     <div className="form-container p-6">
@@ -249,7 +249,7 @@ function FormSendRequest() {
                       </h4>
                       <a
                         className="overflow-ellipsis overflow-hidden text-black mb-3 block hover:text-blue text-center"
-                        href={`https://laozi-testnet4.cosmoscan.io/tx/${transactions}`}
+                        href={`https://laozi-testnet5.cosmoscan.io/tx/${transactions}`}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -275,7 +275,7 @@ function FormSendRequest() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default FormSendRequest;
+export default FormSendRequest

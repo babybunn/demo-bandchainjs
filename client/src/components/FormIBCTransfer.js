@@ -1,53 +1,53 @@
-import { useEffect, useState } from "react";
-import { sendIBC } from "../band";
-import Loading from "./Loading";
-import { useSelector } from "react-redux";
-import UnableService from "./UnableService";
-import AccountWithBalance from "./AccountWithBalance";
+import { useEffect, useState } from 'react'
+import { sendIBC } from '../band'
+import Loading from './Loading'
+import { useSelector } from 'react-redux'
+import UnableService from './UnableService'
+import AccountWithBalance from './AccountWithBalance'
 
 function FormSendToken() {
-  const wallet = useSelector((state) => state.wallet);
-  const [isConnected, setisConnected] = useState(false);
+  const wallet = useSelector((state) => state.wallet)
+  const [isConnected, setisConnected] = useState(false)
 
-  const [tokenAmount, setTokenAmount] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState(0)
   const [receiverAddress, setReceiverAddress] = useState(
-    "band1jrhuqrymzt4mnvgw8cvy3s9zhx3jj0dq30qpte"
-  );
-  const [sendResult, setSendResult] = useState("");
-  const [sendResultSuccess, setSendResultSuccess] = useState("");
-  const [loading, setLoading] = useState(Boolean(0));
-  const ibcchannel = "CONSUMER";
+    'band1jrhuqrymzt4mnvgw8cvy3s9zhx3jj0dq30qpte'
+  )
+  const [sendResult, setSendResult] = useState('')
+  const [sendResultSuccess, setSendResultSuccess] = useState('')
+  const [loading, setLoading] = useState(Boolean(0))
+  const ibcchannel = 'CONSUMER'
 
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
     if (wallet.address) {
-      setisConnected(true);
+      setisConnected(true)
     } else {
-      setisConnected(false);
+      setisConnected(false)
     }
-  }, [wallet]);
+  }, [wallet])
 
   const handleInputTokenAmount = (e) => {
-    setTokenAmount(e.target.value);
-  };
+    setTokenAmount(e.target.value)
+  }
   const handleInputAddress = (e) => {
-    setReceiverAddress(e.target.value);
-  };
+    setReceiverAddress(e.target.value)
+  }
   const sendBandToken = async () => {
-    if (!receiverAddress && !tokenAmount) return;
-    setLoading(Boolean(1));
-    const response = await sendIBC(receiverAddress, tokenAmount, wallet);
-    console.log(response);
+    if (!receiverAddress && !tokenAmount) return
+    setLoading(Boolean(1))
+    const response = await sendIBC(receiverAddress, tokenAmount, wallet)
+    console.log(response)
     if (response.height === 0) {
-      setSendResult(response.rawLog);
+      setSendResult(response.rawLog)
     }
-    if (response.data !== "") {
-      setSendResultSuccess(response.txhash);
+    if (response.data !== '') {
+      setSendResultSuccess(response.txhash)
     }
-    setTransactions((transactions) => [...transactions, response.txhash]);
-    setLoading(Boolean(0));
-  };
+    setTransactions((transactions) => [...transactions, response.txhash])
+    setLoading(Boolean(0))
+  }
 
   return (
     <div className="flex flex-row flex-wrap">
@@ -137,14 +137,14 @@ function FormSendToken() {
                 return (
                   <a
                     className="text-black mb-3 p-3 border-2 border-gray-200 hover:border-blue rounded-xl block"
-                    href={`https://laozi-testnet4.cosmoscan.io/tx/${tx}`}
+                    href={`https://laozi-testnet5.cosmoscan.io/tx/${tx}`}
                     key={ind}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {tx}
                   </a>
-                );
+                )
               })
             ) : (
               <div className="text-md">You don't have any transactions</div>
@@ -153,7 +153,7 @@ function FormSendToken() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default FormSendToken;
+export default FormSendToken

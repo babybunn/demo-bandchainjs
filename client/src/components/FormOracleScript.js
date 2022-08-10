@@ -1,92 +1,92 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useLocation } from "react-router-dom";
-import { useDropzone } from "react-dropzone";
-import { createOracleScript, editOracleScript } from "../band";
-import { useSelector } from "react-redux";
-import UnableService from "./UnableService";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-rust";
-import "prismjs/components/prism-json";
-import "prismjs/themes/prism-tomorrow.css";
-import axios from "axios";
-import Loading from "./Loading";
+import React, { useEffect, useState, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useDropzone } from 'react-dropzone'
+import { createOracleScript, editOracleScript } from '../band'
+import { useSelector } from 'react-redux'
+import UnableService from './UnableService'
+import Editor from 'react-simple-code-editor'
+import { highlight, languages } from 'prismjs/components/prism-core'
+import 'prismjs/components/prism-clike'
+import 'prismjs/components/prism-rust'
+import 'prismjs/components/prism-json'
+import 'prismjs/themes/prism-tomorrow.css'
+import axios from 'axios'
+import Loading from './Loading'
 
 export default function FormOracleScript() {
-  const wallet = useSelector((state) => state.wallet);
+  const wallet = useSelector((state) => state.wallet)
 
   // State
-  const [isConnected, setisConnected] = useState(false);
-  const [step, setStep] = useState(1);
-  const [codeType, setCodeType] = useState("upload");
-  const [previewJson, setPreviewJson] = useState("");
-  const [txhash, settxhash] = useState("");
-  const [isbroadcasting, setisbroadcasting] = useState(false);
+  const [isConnected, setisConnected] = useState(false)
+  const [step, setStep] = useState(1)
+  const [codeType, setCodeType] = useState('upload')
+  const [previewJson, setPreviewJson] = useState('')
+  const [txhash, settxhash] = useState('')
+  const [isbroadcasting, setisbroadcasting] = useState(false)
 
   // Form Data
-  const [osID, setOsId] = useState("");
-  const [osname, setosname] = useState("");
-  const [osdesc, setosdesc] = useState("");
-  const [schema, setschema] = useState("");
-  const [sourcecodeUrl, setsourcecodeUrl] = useState("");
-  const [owner, setOwner] = useState("");
-  const [code, setCode] = useState([]);
-  const [filename, setfilename] = useState("");
-  const [codeEditor, setCodeEditor] = useState(`# Insert your code here`);
-  const [wasmCode, setwasmCode] = useState(null);
-  const [osActionType, setOsActionType] = useState("create");
+  const [osID, setOsId] = useState('')
+  const [osname, setosname] = useState('')
+  const [osdesc, setosdesc] = useState('')
+  const [schema, setschema] = useState('')
+  const [sourcecodeUrl, setsourcecodeUrl] = useState('')
+  const [owner, setOwner] = useState('')
+  const [code, setCode] = useState([])
+  const [filename, setfilename] = useState('')
+  const [codeEditor, setCodeEditor] = useState(`# Insert your code here`)
+  const [wasmCode, setwasmCode] = useState(null)
+  const [osActionType, setOsActionType] = useState('create')
 
-  const location = useLocation();
+  const location = useLocation()
 
   // Handling Functions
   const nextStep = (e) => {
-    e.preventDefault();
-    setStep(step + 1);
-  };
+    e.preventDefault()
+    setStep(step + 1)
+  }
 
   const prevStep = () => {
-    setStep(step - 1);
-  };
+    setStep(step - 1)
+  }
 
   const isFormFilled = () => {
-    if (osname !== "" && owner !== "") {
-      return false;
+    if (osname !== '' && owner !== '') {
+      return false
     }
-    return true;
-  };
+    return true
+  }
 
   const removeFile = () => {
-    setCode([]);
-    setfilename("");
-  };
+    setCode([])
+    setfilename('')
+  }
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      setfilename(acceptedFiles[0].name);
+      setfilename(acceptedFiles[0].name)
       acceptedFiles.forEach((file) => {
-        const reader = new FileReader();
+        const reader = new FileReader()
 
-        reader.onabort = () => console.log("file reading was aborted");
-        reader.onerror = () => console.log("file reading has failed");
+        reader.onabort = () => console.log('file reading was aborted')
+        reader.onerror = () => console.log('file reading has failed')
         reader.onload = () => {
           // Do whatever you want with the file contents
-          const binaryStr = reader.result;
-          setCode(binaryStr);
-        };
-        reader.readAsArrayBuffer(file);
-      });
+          const binaryStr = reader.result
+          setCode(binaryStr)
+        }
+        reader.readAsArrayBuffer(file)
+      })
     }
-  }, []);
+  }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     // accept: "text/x-wasm",
-  });
+  })
 
   const renderSwitchCode = () => {
     switch (codeType) {
-      case "editor":
+      case 'editor':
         return (
           <Editor
             value={codeEditor}
@@ -96,13 +96,13 @@ export default function FormOracleScript() {
             style={{
               fontFamily: '"Fira code", "Fira Mono", monospace',
               fontSize: 12,
-              background: "#282A2B",
-              color: "white",
-              borderRadius: "10px",
-              minHeight: "300px",
+              background: '#282A2B',
+              color: 'white',
+              borderRadius: '10px',
+              minHeight: '300px',
             }}
           />
-        );
+        )
       default:
         return (
           <div className="input-group mb-3">
@@ -117,7 +117,7 @@ export default function FormOracleScript() {
                       src="/images/python-file.png"
                       alt=""
                       className="w-100 block h-auto mr-4"
-                      style={{ maxWidth: "50px" }}
+                      style={{ maxWidth: '50px' }}
                     />
                     <p className="font-medium">{filename}</p>
                   </div>
@@ -152,20 +152,20 @@ export default function FormOracleScript() {
               </div>
             )}
           </div>
-        );
+        )
     }
-  };
+  }
 
   const compileCode = async () => {
-    setStep(step + 1);
-    if (codeType !== "upload") {
+    setStep(step + 1)
+    if (codeType !== 'upload') {
       await axios
         .post(`/compile`, {
           code: codeEditor,
         })
         .then((res) => {
-          setwasmCode(res.data.fileBuf);
-        });
+          setwasmCode(res.data.fileBuf)
+        })
     }
     setPreviewJson(
       JSON.stringify({
@@ -176,21 +176,21 @@ export default function FormOracleScript() {
         owner: owner,
         sender: wallet.address,
       })
-    );
-  };
+    )
+  }
 
   const submitCode = async () => {
-    setisbroadcasting(true);
-    setStep(step + 1);
+    setisbroadcasting(true)
+    setStep(step + 1)
     const response =
-      osActionType === "create"
+      osActionType === 'create'
         ? await createOracleScript(
             {
               name: osname,
               desc: osdesc,
               schema: schema,
               url: sourcecodeUrl,
-              code: codeType === "upload" ? Buffer.from(code) : Buffer.from(wasmCode),
+              code: codeType === 'upload' ? Buffer.from(code) : Buffer.from(wasmCode),
               owner: owner,
             },
             wallet
@@ -202,38 +202,38 @@ export default function FormOracleScript() {
               desc: osdesc,
               schema: schema,
               url: sourcecodeUrl,
-              code: codeType === "upload" ? Buffer.from(code) : Buffer.from(wasmCode),
+              code: codeType === 'upload' ? Buffer.from(code) : Buffer.from(wasmCode),
               owner: owner,
             },
             wallet
-          );
+          )
     if (response.code === 0) {
-      settxhash(response.txhash);
-      setisbroadcasting(false);
+      settxhash(response.txhash)
+      setisbroadcasting(false)
     } else {
-      setisbroadcasting(false);
-      console.log(response);
+      setisbroadcasting(false)
+      console.log(response)
     }
     // Todo: Show loading state and the result of the tx and show the next step
-  };
+  }
 
   // Effects
   useEffect(() => {
     if (wallet.address) {
-      setisConnected(true);
+      setisConnected(true)
     } else {
-      setisConnected(false);
+      setisConnected(false)
     }
-    if (location.pathname.includes("/edit")) {
-      setOsActionType("edit");
+    if (location.pathname.includes('/edit')) {
+      setOsActionType('edit')
     }
-  }, [wallet]);
+  }, [wallet])
 
   return (
     <div className="flex flex-row flex-wrap">
       <div className="w-full md:w-4/12 mb-8 md:mb-0">
         <h2 className="mb-5 text-3xl ">
-          <strong>{osActionType === "edit" ? `Edit an ` : `Add a new `} Oracle Script</strong>
+          <strong>{osActionType === 'edit' ? `Edit an ` : `Add a new `} Oracle Script</strong>
         </h2>
         <p className="mb-5">
           <a
@@ -242,9 +242,9 @@ export default function FormOracleScript() {
             rel="noreferrer"
           >
             <strong>
-              {osActionType === "edit" ? `MsgEditOracleScript` : `MsgCreateOracleScript`}{" "}
+              {osActionType === 'edit' ? `MsgEditOracleScript` : `MsgCreateOracleScript`}{' '}
             </strong>
-          </a>{" "}
+          </a>{' '}
           is a message for this service
         </p>
         <div className="process-step">
@@ -275,7 +275,7 @@ export default function FormOracleScript() {
                       <h3 className="mb-4">
                         <strong>Step 1:</strong> Enter the oracle script information below.
                       </h3>
-                      {osActionType === "edit" ? (
+                      {osActionType === 'edit' ? (
                         <div className="input-group mb-3">
                           <label
                             htmlFor="input-address"
@@ -392,7 +392,7 @@ export default function FormOracleScript() {
                             name="codeType"
                             id="input-codeType-upload"
                             value="upload"
-                            checked={codeType === "upload"}
+                            checked={codeType === 'upload'}
                             onChange={(e) => setCodeType(e.target.value)}
                           />
                           <label
@@ -404,7 +404,7 @@ export default function FormOracleScript() {
                               alt=""
                               className="w-full mx-auto block mb-2"
                               style={{
-                                maxWidth: "103px",
+                                maxWidth: '103px',
                               }}
                             />
                             Upload from my computer (.rust)
@@ -416,7 +416,7 @@ export default function FormOracleScript() {
                             name="codeType"
                             id="input-codeType-editor"
                             value="editor"
-                            checked={codeType === "editor"}
+                            checked={codeType === 'editor'}
                             onChange={(e) => setCodeType(e.target.value)}
                           />
                           <label
@@ -428,7 +428,7 @@ export default function FormOracleScript() {
                               alt=""
                               className="w-full mx-auto block mb-2"
                               style={{
-                                maxWidth: "103px",
+                                maxWidth: '103px',
                               }}
                             />
                             Using Code Editor
@@ -467,7 +467,7 @@ export default function FormOracleScript() {
                         Previous
                       </button>
                       <button
-                        disabled={code.byteLength > 0 ? false : codeEditor === ""}
+                        disabled={code.byteLength > 0 ? false : codeEditor === ''}
                         onClick={(e) => compileCode()}
                         className="disabled:opacity-50 button block text-md text-white bg-black hover:bg-black border-2 border-black focus:outline-none focus:ring-black focus:ring-opacity-50  py-2 px-10 rounded-xl focus:outline-none"
                       >
@@ -489,10 +489,10 @@ export default function FormOracleScript() {
                         style={{
                           fontFamily: '"Fira code", "Fira Mono", monospace',
                           fontSize: 12,
-                          background: "#282A2B",
-                          color: "white",
-                          borderRadius: "10px",
-                          minHeight: "300px",
+                          background: '#282A2B',
+                          color: 'white',
+                          borderRadius: '10px',
+                          minHeight: '300px',
                         }}
                       />
                     </div>
@@ -538,7 +538,7 @@ export default function FormOracleScript() {
                         </h4>
                         <a
                           className="overflow-ellipsis overflow-hidden text-black mb-3 block hover:text-blue text-center"
-                          href={`https://laozi-testnet4.cosmoscan.io/tx/${txhash}`}
+                          href={`https://laozi-testnet5.cosmoscan.io/tx/${txhash}`}
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -554,7 +554,7 @@ export default function FormOracleScript() {
                     </div>
                   )
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
             </div>
@@ -562,5 +562,5 @@ export default function FormOracleScript() {
         )}
       </div>
     </div>
-  );
+  )
 }

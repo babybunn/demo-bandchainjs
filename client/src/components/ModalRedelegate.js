@@ -1,32 +1,32 @@
-import { useState, useContext } from "react";
-import { reDelegateCoin } from "../band";
-import { useSelector } from "react-redux";
-import { ModalDelegateContext } from "../app-context";
-import { gql, useQuery } from "@apollo/client";
+import { useState, useContext } from 'react'
+import { reDelegateCoin } from '../band'
+import { useSelector } from 'react-redux'
+import { ModalDelegateContext } from '../app-context'
+import { gql, useQuery } from '@apollo/client'
 
 export default function ModalRedelegate({ title, operator }) {
-  const { isShowModalRedelegate, setIsShowModalRedelegate } = useContext(ModalDelegateContext);
-  const wallet = useSelector((state) => state.wallet);
-  const [modalloading, setmodalloading] = useState(false);
-  const [txhash, settxhash] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [destvalidator, setdestvalidator] = useState("");
+  const { isShowModalRedelegate, setIsShowModalRedelegate } = useContext(ModalDelegateContext)
+  const wallet = useSelector((state) => state.wallet)
+  const [modalloading, setmodalloading] = useState(false)
+  const [txhash, settxhash] = useState('')
+  const [amount, setAmount] = useState(0)
+  const [destvalidator, setdestvalidator] = useState('')
 
   const closeModalHandler = () => {
-    setmodalloading(false);
-    setIsShowModalRedelegate(false);
-  };
+    setmodalloading(false)
+    setIsShowModalRedelegate(false)
+  }
 
   const confirm = async () => {
-    setmodalloading(true);
-    console.log(operator);
-    console.log(destvalidator);
+    setmodalloading(true)
+    console.log(operator)
+    console.log(destvalidator)
 
-    const response = await reDelegateCoin(operator, destvalidator, amount, wallet);
+    const response = await reDelegateCoin(operator, destvalidator, amount, wallet)
     if (response) {
-      settxhash(response.txhash);
+      settxhash(response.txhash)
     }
-  };
+  }
 
   const GET_VALIDATORS = gql`
     query GetValidators {
@@ -35,9 +35,9 @@ export default function ModalRedelegate({ title, operator }) {
         operator_address
       }
     }
-  `;
+  `
 
-  const { loading, error, data } = useQuery(GET_VALIDATORS);
+  const { loading, error, data } = useQuery(GET_VALIDATORS)
 
   return (
     <div
@@ -46,8 +46,8 @@ export default function ModalRedelegate({ title, operator }) {
       aria-modal="true"
       className={
         isShowModalRedelegate
-          ? "fixed z-10 inset-0 overflow-y-auto block"
-          : " fixed z-10 inset-0 overflow-y-auto hidden"
+          ? 'fixed z-10 inset-0 overflow-y-auto block'
+          : ' fixed z-10 inset-0 overflow-y-auto hidden'
       }
     >
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -104,7 +104,7 @@ export default function ModalRedelegate({ title, operator }) {
                   </h4>
                   <a
                     className="overflow-ellipsis overflow-hidden text-black mb-3 block hover:text-blue"
-                    href={`https://laozi-testnet4.cosmoscan.io/tx/${txhash}`}
+                    href={`https://laozi-testnet5.cosmoscan.io/tx/${txhash}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -176,5 +176,5 @@ export default function ModalRedelegate({ title, operator }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

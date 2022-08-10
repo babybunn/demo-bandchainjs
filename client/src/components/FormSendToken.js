@@ -1,61 +1,61 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
-import { Message, Coin } from "@bandprotocol/bandchain.js";
-import Loading from "./Loading";
-import { broadCastTx } from "../band";
-import { useSelector } from "react-redux";
-import UnableService from "./UnableService";
-import AccountWithBalance from "./AccountWithBalance";
+import { Message, Coin } from '@bandprotocol/bandchain.js'
+import Loading from './Loading'
+import { broadCastTx } from '../band'
+import { useSelector } from 'react-redux'
+import UnableService from './UnableService'
+import AccountWithBalance from './AccountWithBalance'
 
 function FormSendToken() {
-  const wallet = useSelector((state) => state.wallet);
-  const [isConnected, setisConnected] = useState(false);
-  const [tokenAmount, setTokenAmount] = useState(0);
-  const [receiverAddress, setReceiverAddress] = useState("");
-  const [sendResult, setSendResult] = useState("");
-  const [sendResultSuccess, setSendResultSuccess] = useState("");
-  const [loading, setLoading] = useState(Boolean(0));
+  const wallet = useSelector((state) => state.wallet)
+  const [isConnected, setisConnected] = useState(false)
+  const [tokenAmount, setTokenAmount] = useState(0)
+  const [receiverAddress, setReceiverAddress] = useState('')
+  const [sendResult, setSendResult] = useState('')
+  const [sendResultSuccess, setSendResultSuccess] = useState('')
+  const [loading, setLoading] = useState(Boolean(0))
 
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
     if (wallet.address) {
-      setisConnected(true);
+      setisConnected(true)
     } else {
-      setisConnected(false);
+      setisConnected(false)
     }
-  }, [wallet]);
+  }, [wallet])
 
   const handleInputTokenAmount = (e) => {
-    setTokenAmount(e.target.value);
-  };
+    setTokenAmount(e.target.value)
+  }
   const handleInputAddress = (e) => {
-    setReceiverAddress(e.target.value);
-  };
+    setReceiverAddress(e.target.value)
+  }
   const sendBandToken = async () => {
-    if (!receiverAddress && !tokenAmount) return;
-    setLoading(true);
-    const response = await sendCoin();
-    if (response.data === "") setSendResult(response.rawLog);
-    if (response.data !== "") {
-      setTransactions((transactions) => [...transactions, response.txhash]);
-      setSendResultSuccess(response.txhash);
+    if (!receiverAddress && !tokenAmount) return
+    setLoading(true)
+    const response = await sendCoin()
+    if (response.data === '') setSendResult(response.rawLog)
+    if (response.data !== '') {
+      setTransactions((transactions) => [...transactions, response.txhash])
+      setSendResultSuccess(response.txhash)
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const sendCoin = async () => {
-    const { MsgSend } = Message;
+    const { MsgSend } = Message
 
-    const sendAmount = new Coin();
-    sendAmount.setDenom("uband");
-    sendAmount.setAmount((tokenAmount * 1e6).toString());
+    const sendAmount = new Coin()
+    sendAmount.setDenom('uband')
+    sendAmount.setAmount((tokenAmount * 1e6).toString())
 
-    const msg = new MsgSend(wallet.address, receiverAddress, [sendAmount]);
-    const response = await broadCastTx(msg, wallet.mnemonic);
+    const msg = new MsgSend(wallet.address, receiverAddress, [sendAmount])
+    const response = await broadCastTx(msg, wallet.mnemonic)
 
-    return response;
-  };
+    return response
+  }
 
   return (
     <div className="flex flex-row flex-wrap">
@@ -132,11 +132,11 @@ function FormSendToken() {
                 return (
                   <a
                     className="text-black mb-3 p-3 border-2 border-gray-200 hover:border-blue rounded-xl block"
-                    href={`https://laozi-testnet4.cosmoscan.io/tx/${tx}`}
+                    href={`https://laozi-testnet5.cosmoscan.io/tx/${tx}`}
                   >
                     {tx}
                   </a>
-                );
+                )
               })
             ) : (
               <div className="text-md">You don't have any transactions</div>
@@ -145,7 +145,7 @@ function FormSendToken() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default FormSendToken;
+export default FormSendToken
