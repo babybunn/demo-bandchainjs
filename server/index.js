@@ -25,7 +25,7 @@ app.post('/compile', (req, res) => {
 
     execute(
       "RUSTFLAGS='-C link-arg=-s' cargo build --release --target wasm32-unknown-unknown",
-      function (file) {
+      function (error, stdout, stderr) {
         const buf = fs.readFileSync('target/wasm32-unknown-unknown/release/crypto.wasm')
         return res.send({
           fileBuf: buf,
